@@ -19,13 +19,15 @@
     <script type="text/javascript" src="<spring:url value="/resources/js/jquery/jquery.tmpl.min.js"></spring:url>"></script>
 	<script type="text/javascript" src="<spring:url value="/resources/js/jquery/jquery.form.js"></spring:url>"></script>
 	<script type="text/javascript" src="<spring:url value="/resources/js/common/crypto-js.js"></spring:url>"></script>
-	<script type="text/javascript" src="<spring:url value="/resources/js/test/app.js"></spring:url>?<%=new java.util.Date().getTime()%>"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/js/test/common.js"></spring:url>?1.1"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/js/test/enc.js"></spring:url>?1.2"></script>
 </head>
 <body>
 	<div class="container">  
 		<div id="tabs" style="width: 48%; margin-left: 1%; float: left; height: 98%; overflow: hidden;">
 		    <ul>
-		        <li><a href="<c:url value='/api/app/qrcode/index' />">码终端管理</a></li>
+		        <li><a href="<c:url value='/api/test/down/index' />">交易接口</a></li>
+		        <li><a href="<c:url value='/api/test/submerchant/index' />">入网接口</a></li>
 		    </ul>
 		    <div id="tabs-setting" class="area-input" >
 		    	
@@ -82,11 +84,8 @@
 			padding-left: 0px;
 			margin-top: 5px;
 		}
-		.editor td.field input, .editor td.field textarea {
+		.editor td.field input {
 			width: 90%;
-		}
-		.editor td.field textarea {
-			height: 50px;
 		}
 		fieldset {
 		    padding:10px;

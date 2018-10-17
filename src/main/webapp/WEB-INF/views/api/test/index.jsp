@@ -20,13 +20,14 @@
 	<script type="text/javascript" src="<spring:url value="/resources/js/jquery/jquery.form.js"></spring:url>"></script>
 	<script type="text/javascript" src="<spring:url value="/resources/js/common/crypto-js.js"></spring:url>"></script>
 	<script type="text/javascript" src="<spring:url value="/resources/js/test/common.js"></spring:url>?1.1"></script>
-	<script type="text/javascript" src="<spring:url value="/resources/js/test/enc.js"></spring:url>?1.1"></script>
+	<script type="text/javascript" src="<spring:url value="/resources/js/test/enc.js"></spring:url>?1.2"></script>
 </head>
 <body>
 	<div class="container">  
 		<div id="tabs" style="width: 48%; margin-left: 1%; float: left; height: 98%; overflow: hidden;">
 		    <ul>
-		        <li><a href="<c:url value='/api/test/down/index' />">下游接口</a></li>
+		        <li><a href="<c:url value='/api/test/down/index' />">交易接口</a></li>
+		        <li><a href="<c:url value='/api/test/submerchant/index' />">入网接口</a></li>
 		    </ul>
 		    <div id="tabs-setting" class="area-input" >
 		    	

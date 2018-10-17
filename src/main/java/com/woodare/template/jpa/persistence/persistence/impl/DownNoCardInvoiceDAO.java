@@ -247,11 +247,11 @@ public class DownNoCardInvoiceDAO extends AbstractPagedDAO<DownNoCardInvoice> im
 		sb.append("    count(a.id) total_count,");
 		sb.append("    sum(case when a.status = '00' then a.price else 0 end) price,");
 		sb.append("    sum(case when a.status = '00' then 1 else 0 end) count,");
-		/*sb.append("    sum(case when a.status = '00' then a.down_real_price else 0 end) real_price,");
+		sb.append("    sum(case when a.status = '00' then a.down_real_price else 0 end) real_price,");
 		sb.append("    sum(case when a.status = '00' then a.merchant_fee else 0 end) fee_price,");
-		sb.append("    sum(case when a.status = '00' then a.agt_profit else 0 end) agt_profit,");*/
+		sb.append("    sum(case when a.status = '00' then a.agt_profit_amt else 0 end) agt_profit,");
 		sb.append("    sum(case when a.status = '00' then a.profit else 0 end) profit,");
-		/*sb.append("    pay_type");*/
+		sb.append("    pay_link");
 		sb.append("  from down_no_card_invoice a");
 		sb.append("  where a.delete_status = 'VALID'");
 		if (StringUtils.isNotEmpty(searchData.getMchNo())) {
@@ -269,7 +269,7 @@ public class DownNoCardInvoiceDAO extends AbstractPagedDAO<DownNoCardInvoice> im
 		if (StringUtils.isNotEmpty(searchData.getKeywords())) {
 			sb.append("   and (a.mch_name like :keywords or a.mch_no like :keywords)");
 		}
-		sb.append("  group by a.mch_no,pay_type order by a.mch_no,pay_type");
+		sb.append("  group by a.mch_no,pay_link order by a.mch_no,pay_link");
 		sb.append(" ) m");
 		sb.append(" left join down_merchant n on m.mch_no = n.mch_no");
 		// TypedQuery<InvoiceSumData>
