@@ -14,6 +14,8 @@ package com.woodare.template.web.viewdata.downmerchantfundaccount;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
+
 import com.woodare.template.jpa.persistence.data.downmerchantfundaccount.DownMerchantFundAccountData;
 
 /**
@@ -35,6 +37,10 @@ public class DownMerchantFundAccountViewData extends DownMerchantFundAccountData
 	private String remark;
 
 	private BigDecimal curFrozenAmt;
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	/**
 	 * @return the curFrozenAmt

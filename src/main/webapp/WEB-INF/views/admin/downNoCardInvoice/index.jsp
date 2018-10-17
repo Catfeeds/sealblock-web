@@ -86,9 +86,9 @@
 	<input type="text" class="input-box search-input-box" placeholder="状态描述" name="statusDesc" value="${search.statusDesc}"></input>
 </div>  --%>
 	
-	 <%-- <div class="ms-col-fix-300 clear" >
+	  <div class="ms-col-fix-300 clear" >
 		<utils:hideColumn defaultVal="渠道商户,手续费（元）,清算金额（元）,平台分润（元）" />
-	</div> --%>
+	</div>
 	
 	 <input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input>
 	<!-- <div class="ms-col-fix-all clear"> -->

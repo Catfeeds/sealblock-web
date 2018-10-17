@@ -33,17 +33,17 @@ table.list-wapper td.num {
 		<option value="Agent" <c:if test="${search.accountType eq 'Agent'}">selected</c:if>>代理商</option>
 	</select>
 	
-	<label>&nbsp;</label>
-	<input type="checkbox" style="width: 15px;" <c:if test="${search.changedFlag eq true  }">checked="checked"</c:if> class="input-box search-input-box" 
-		id="changedFlag" placeholder="仅显示交易商户" name="changedFlag" value="true"></input>
+	 <label>&nbsp;</label>
+	<input type="checkbox" style="width: 15px;" <c:if test="${search.searchFlag eq true  }">checked="checked"</c:if> class="input-box search-input-box" 
+		id="changedFlag" placeholder="仅显示交易商户" name="searchFlag" value="true"></input>
 	<label for="changedFlag" style="text-align: left; padding-left: 5px;">存在余额变动</label>
 	
-	<input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input>
+	<%-- <input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input> --%>
 	<div class="space"></div>
 	<input type="submit" value="搜索" class="btn"></input>
 </form>
 <form action="<c:url value="/admin/downMerchantFundAccount/export" />" target="_blank" method="post" class="export-form">
-	<!-- <input type="submit" value="导出" class="btn btn-orange export-btn" ></input> -->
+	<input type="submit" value="导出" class="btn btn-orange export-btn" ></input>
 </form>
 <table class="list-wapper">
 	<tr class="list-header">
@@ -80,8 +80,8 @@ table.list-wapper td.num {
 				<c:if test="${item.accountType eq 'Agent'}">代理商</c:if>
 			</td>
 			<td style="text-align: left;"><c:out value="${item.mchName}" />(<c:out value="${item.mchNo}" />)</td>
-			<td><c:out value="${item.creditRatio}" />%</td>
-			<td><utils:dateFormat value="${item.settleDate}" /></td>
+			<td><c:out value="${item.creditRatio}"/>%</td>
+		    <td><c:out value="${item.createDate}" /></td>
 			<td class="num"><fmt:formatNumber value="${item.settleInAmt / 100 }" pattern="#,##0.00#"/>&nbsp;</td>
 			<td class="num"><fmt:formatNumber value="${item.settleOutAmt / 100 }" pattern="#,##0.00#"/>&nbsp;</td>
 			<td class="num"><fmt:formatNumber value="${(item.settleInAmt - item.settleOutAmt) / 100}" pattern="#,##0.00#"/>&nbsp;</td>
@@ -100,7 +100,7 @@ table.list-wapper td.num {
 			
 			<c:set var="frozenAmt" value="${item.frozenAmt / 100 + frozenAmt }" />
 		</tr>
-	</c:forEach>
+	</c:forEach> 
 	
 	<c:if test="${rowNum gt 0 }">
 		<tr class="list-item" style="font-weight: bold;">

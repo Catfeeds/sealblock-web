@@ -95,6 +95,7 @@ public class AdminDownNoCardInvoiceController extends BaseController {
 		ModelAndView mav = new ModelAndView(getTemplate("/admin/downNoCardInvoice/sum"));
 		mav.addObject("items", items);
 		mav.addObject("search", searchData);
+		System.out.println(mav);
 		return mav;
 	}
 

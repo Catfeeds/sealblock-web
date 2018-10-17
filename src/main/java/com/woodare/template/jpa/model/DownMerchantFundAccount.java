@@ -109,9 +109,10 @@ public class DownMerchantFundAccount extends AbstractBusiModel {
 	@Column(name = "change_date", length = 8, nullable = false)
 	private String changeDate;
 
-	// /** 会计日期 */
-	// @Column(name = "settle_date", length = 8)
-	// private String settleDate;
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	/**
 	 * @return the accountType
 	 */

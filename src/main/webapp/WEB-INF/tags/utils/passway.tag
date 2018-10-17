@@ -1,5 +1,3 @@
-<%@tag import="com.woodare.template.helper.cache.PasswayOrgAccSettings"%>
-<%@tag import="com.woodare.template.jpa.persistence.data.passwayorgaccsetting.PasswayOrgAccSettingData"%>
 <%@tag import="com.woodare.core.web.taglibs.DicTaglibHelper" %>
 <%@tag import="com.woodare.core.web.common.viewdata.CodeAndName" %>
 <%@tag pageEncoding='UTF-8' trimDirectiveWhitespaces="true" language="java"  %>

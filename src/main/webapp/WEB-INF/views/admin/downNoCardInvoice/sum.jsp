@@ -35,8 +35,8 @@ table.list-wapper td.num {
 	<label for="mchNo">机构号：</label>
 	<input type="text" class="input-box search-input-box" placeholder="机构号" name="mchNo" value="${search.mchNo}"></input>
 	
-	<label for="settleType">结算模式：</label>
-	<utils:enum key="EnumSettleType" name="settleType" cssName="input-box search-input-box" value="${search.settleType}"></utils:enum>
+<%-- 	<label for="settleType">结算模式：</label>
+	<utils:enum key="EnumSettleType" name="settleType" cssName="input-box search-input-box" value="${search.settleType}"></utils:enum> --%>
 
 	<label for="dateCate">时间：</label>
 	<select name="dateCate" class="input-box search-input-box">
@@ -48,9 +48,9 @@ table.list-wapper td.num {
 	</select>
 	
 	<label for="startDate" class="custom-d-cate">From：</label>
-	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate" value="<fmt:formatDate value="${search.startDate}" pattern="yyyy/MM/dd"/>">
+	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate" value="<fmt:formatDate value="${search.startDate}" pattern="yyyy/MM/dd"/>"></input>
 	<label for="endDate" class="custom-d-cate">To：</label>
-	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="结束时间" name="endDate" value="<fmt:formatDate value="${search.endDate}" pattern="yyyy/MM/dd"/>">
+	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="结束时间" name="endDate" value="<fmt:formatDate value="${search.endDate}" pattern="yyyy/MM/dd"/>"></input>
 	
 	<script>
 		$(".date-picker").datepicker($.datepicker.regional[ "zh-CN" ]);
