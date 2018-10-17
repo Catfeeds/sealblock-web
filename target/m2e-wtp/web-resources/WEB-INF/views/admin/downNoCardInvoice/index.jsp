@@ -32,10 +32,10 @@
 		<label for="channel">通道号：</label>
 		<utils:combo name="channel" cssName="input-box search-input-box" value="${search.channel}"></utils:combo>
 	</div>
-	<div class="ms-col-fix-100 clear">
+<%-- 	<div class="ms-col-fix-100 clear">
 		<label for="settleType">结算模式：</label>
 		<utils:enum key="EnumSettleType" name="settleType" cssName="input-box search-input-box" value="${search.settleType}"></utils:enum>
-	</div>
+	</div> --%>
 	<div class="ms-col-fix-100 clear">
 		<label for="status">交易状态：</label>
 		<select name="status" class="input-box search-input-box">
@@ -56,13 +56,13 @@
 			<option value="LAST_30_DAYS" <c:if test="${'LAST_30_DAYS' eq search.dateCate}">selected</c:if>>过去30天
 		</select>
 	</div>
-	<div class="ms-col-fix-100 clear">
+ 	<div class="ms-col-fix-100 clear">
 		<label for="startDate" class="custom-d-cate">From：</label>
-		<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate" value="<fmt:formatDate value="${search.startDate}" pattern="yyyy/MM/dd"/>"></input>
+		<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate" value="<fmt:formatDate value="${search.startDate}" pattern="yyyy/MM/dd"/>">
 	</div>
 	<div class="ms-col-fix-100 clear">
 		<label for="endDate" class="custom-d-cate">To：</label>
-		<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="结束时间" name="endDate" value="<fmt:formatDate value="${search.endDate}" pattern="yyyy/MM/dd"/>"></input>
+		<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="结束时间" name="endDate" value="<fmt:formatDate value="${search.endDate}" pattern="yyyy/MM/dd"/>">
 		<script>
 			$(".date-picker").datepicker($.datepicker.regional[ "zh-CN" ]);
 			$("select[name='dateCate']").change(function(){
@@ -79,16 +79,18 @@
 			$('.datetime-picker').timepicker({ 'timeFormat': 'H:i:s' });
 		</script>
 	</div>
-		
-	<div class="ms-col-fix-100 clear">
+
+<!-- Entity没有statusDesc字段 -->
+<%--  <div class="ms-col-fix-100 clear">
 	<label for="statusDesc">状态描述：</label>
 	<input type="text" class="input-box search-input-box" placeholder="状态描述" name="statusDesc" value="${search.statusDesc}"></input>
-	</div>
+</div>  --%>
 	
-	<div class="ms-col-fix-300 clear" >
+	 <%-- <div class="ms-col-fix-300 clear" >
 		<utils:hideColumn defaultVal="渠道商户,手续费（元）,清算金额（元）,平台分润（元）" />
-	</div>
-	<input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input>
+	</div> --%>
+	
+	 <input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input>
 	<!-- <div class="ms-col-fix-all clear"> -->
 	<input type="submit" value="搜索" class="btn"></input>
 	<!-- </div> -->
@@ -96,9 +98,9 @@
 <form action="<c:url value="/admin/downNoCardInvoice/export" />" target="_blank" method="post" class="export-form">
 	<input type="submit" value="导出" class="btn btn-orange export-btn" ></input>
 </form>
-<%-- <form action="<c:url value="/admin/downNoCardInvoice/checkTotal" />" method="post" style="position: absolute; right: 2.5%; top: 50px;">
+ <form action="<c:url value="/admin/downNoCardInvoice/checkTotal" />" method="post" style="position: absolute; right: 2.5%; top: 50px;">
 	<input type="submit" value="同步" class="btn btn-orange" ></input>
-</form> --%>
+</form>
 <table class="list-wapper">
 	<tr class="list-header">
 		<td>渠道</td>
@@ -108,7 +110,7 @@
 		<td>机构名称</td>
 		<td>商品名</td>
 		<td>支付方式</td>
-		<td>结算模式</td>
+		<!-- <td>结算模式</td> -->
 		<td>支付卡</td>
 		<td align="right">交易金额（元）</td>
 		<td align="right">手续费（元）</td>
@@ -141,9 +143,9 @@
 			<td>
 				<utils:paytype mode='lbl' value="${item.payType }" />
 			</td>
-			<td>
+		<%-- 	<td>
 				<utils:enum mode="lbl" key="EnumSettleType" value="${item.settleType}"></utils:enum>
-			</td>
+			</td> --%>
 	
 			<td><c:out value="${item.payCardNo}" /></td>
 			<td align="right">
