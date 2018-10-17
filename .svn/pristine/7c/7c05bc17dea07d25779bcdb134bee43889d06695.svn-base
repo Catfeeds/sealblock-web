@@ -1,0 +1,725 @@
+/******************************************************************************
+ *                                                                             
+ *                      Woodare PROPRIETARY INFORMATION                        
+ *                                                                             
+ *          The information contained herein is proprietary to Woodare         
+ *           and shall not be reproduced or disclosed in whole or in part      
+ *                    or used for any design or manufacture                    
+ *              without direct written authorization from FengDa.              
+ *                                                                             
+ *            Copyright (c) 2013 by Woodare.  All rights reserved.             
+ *                                                                             
+ *****************************************************************************/
+package com.woodare.template.jpa.model;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Index;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+
+import com.woodare.core.base.AbstractBusiModel;
+import com.woodare.framework.annotation.EntityDescriptor;
+import com.woodare.template.jpa.model.data.EnumDownNoCardChannel;
+import com.woodare.template.jpa.model.data.EnumOrderStatus;
+
+/**
+ * ClassName: DownNoCardInvoice
+ * 
+ * @description
+ * @author Luke
+ * @Date Oct. 16, 2018
+ */
+@Entity
+@EntityDescriptor(name = "下游交易明细", category = "content")
+@Table(
+		// 联合唯一索引键
+		uniqueConstraints = {
+				// 机构日期 + 机构流水号
+				@UniqueConstraint(columnNames = { "mch_no", "trade_no" }) },
+		// 索引键
+		indexes = {
+				// 创建时间
+				@Index(columnList = "create_date"),
+				// 平台流水号
+				@Index(columnList = "trade_no", unique = true) })
+public class DownNoCardInvoice extends AbstractBusiModel {
+	private static final long serialVersionUID = 3645420330704734673L;
+
+	/** 公链类型 **/
+	@Column(length = 10, nullable = false)
+	@Enumerated(EnumType.STRING)
+	private EnumDownNoCardChannel channel;
+
+	/** 币标识, eth, usdt */
+	@Column(length = 10, nullable = false)
+	private String coin;
+
+	/** 币名称 */
+	@Column(length = 20, nullable = false)
+	private String coinName;
+
+	/** 商户号 **/
+	@Column(name = "mch_no", length = 20, nullable = false)
+	private String mchNo;
+
+	/** 商户名 **/
+	@Column(length = 100, nullable = false)
+	private String mchName;
+
+	/** 平台流水号 */
+	@Column(length = 30, nullable = false, unique = true)
+	private String transNo;
+
+	/** 平台日期yyyyMMdd */
+	@Column(length = 8, nullable = false)
+	private String transDate;
+
+	/** 商品标题 */
+	@Column(length = 20, nullable = false)
+	private String subject;
+
+	/** 下游交易流水号 */
+	@Column(name = "trade_no", length = 40, nullable = false)
+	private String tradeNo;
+
+	/** 订单时间, 格式：yyyyMMddHHmmss */
+	@Column(length = 14, nullable = false)
+	private String orderDate;
+
+	/** 同步回调地址 */
+	@Column(length = 512)
+	private String callbackUrl;
+
+	/** 异步通知地址 */
+	@Column(length = 512)
+	private String notifyUrl;
+
+	/** 代理商 **/
+	@Column(length = 20, nullable = false)
+	private String agentNo;
+
+	/** 交易额 */
+	@Column(scale = 8, precision = 15, nullable = false)
+	private BigDecimal price;
+
+	/** 机构交易费率，单位：千分之 */
+	@Column(scale = 2, precision = 5, nullable = false)
+	private BigDecimal feeRatio;
+
+	/** 机构单笔手续费，单位：固定值 */
+	@Column(scale = 8, precision = 12, nullable = false)
+	private BigDecimal addFeeAmt;
+
+	/** 用户交易手续费 */
+	@Column(scale = 8, precision = 15, nullable = false)
+	private BigDecimal subUserFee;
+
+	/** 商户清算金额 */
+	@Column(scale = 8, precision = 15, nullable = false)
+	private BigDecimal downRealPrice;
+
+	/** 机构交易手续费 */
+	@Column(scale = 8, precision = 15, nullable = false)
+	private BigDecimal merchantFee;
+
+	/** 代理商利润 */
+	@Column(scale = 8, precision = 15, nullable = false)
+	private BigDecimal agtProfitAmt;
+
+	/** 平台利润 */
+	@Column(scale = 8, precision = 15, nullable = false)
+	private BigDecimal profit;
+
+	/** 用户标识 */
+	@Column(length = 32, nullable = false)
+	private String userNo;
+
+	/** 用户姓名 */
+	@Column(length = 30, nullable = false)
+	private String userName;
+
+	/** 用户身份证号 */
+	@Column(length = 30, nullable = false)
+	private String userCertId;
+
+	/** 用户联系电话 */
+	@Column(length = 20, nullable = false)
+	private String userPhone;
+
+	/** 保留缺省域1 */
+	@Column(length = 100)
+	private String merResv1;
+
+	/** 保留缺省域2 */
+	@Column(length = 200)
+	private String merResv2;
+
+	/** 上游流水号 */
+	@Column(length = 128)
+	private String upTransNo;
+
+	/** 交易状态 */
+	@Column(nullable = false)
+	@Enumerated(EnumType.ORDINAL)
+	private EnumOrderStatus status;
+
+	/** 交易状态描述 */
+	@Column(length = 128)
+	private String statusDesc;
+
+	/** 状态更新时间 */
+	@Column(nullable = false)
+	private Date statusChgDate;
+
+	/** 公网交易状态 */
+	@Column(nullable = false)
+	@Enumerated(EnumType.ORDINAL)
+	private EnumOrderStatus fundStatus;
+
+	/** 公网状态描述 */
+	@Column(length = 128)
+	private String fundStatusDesc;
+
+	/** 公网更新时间 */
+	@Column(nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fundChgDate;
+
+	/** 支付链接 */
+	@Column(length = 100)
+	private String payLink;
+
+	/**
+	 * @return the userNo
+	 */
+	public String getUserNo() {
+		return userNo;
+	}
+
+	/**
+	 * @param userNo
+	 *            the userNo to set
+	 */
+	public void setUserNo(String userNo) {
+		this.userNo = userNo;
+	}
+
+	/**
+	 * @return the statusChgDate
+	 */
+	public Date getStatusChgDate() {
+		return statusChgDate;
+	}
+
+	/**
+	 * @param statusChgDate
+	 *            the statusChgDate to set
+	 */
+	public void setStatusChgDate(Date statusChgDate) {
+		this.statusChgDate = statusChgDate;
+	}
+
+	/**
+	 * @return the channel
+	 */
+	public EnumDownNoCardChannel getChannel() {
+		return channel;
+	}
+
+	/**
+	 * @param channel
+	 *            the channel to set
+	 */
+	public void setChannel(EnumDownNoCardChannel channel) {
+		this.channel = channel;
+	}
+
+	/**
+	 * @return the coin
+	 */
+	public String getCoin() {
+		return coin;
+	}
+
+	/**
+	 * @param coin
+	 *            the coin to set
+	 */
+	public void setCoin(String coin) {
+		this.coin = coin;
+	}
+
+	/**
+	 * @return the coinName
+	 */
+	public String getCoinName() {
+		return coinName;
+	}
+
+	/**
+	 * @param coinName
+	 *            the coinName to set
+	 */
+	public void setCoinName(String coinName) {
+		this.coinName = coinName;
+	}
+
+	/**
+	 * @return the mchNo
+	 */
+	public String getMchNo() {
+		return mchNo;
+	}
+
+	/**
+	 * @param mchNo
+	 *            the mchNo to set
+	 */
+	public void setMchNo(String mchNo) {
+		this.mchNo = mchNo;
+	}
+
+	/**
+	 * @return the mchName
+	 */
+	public String getMchName() {
+		return mchName;
+	}
+
+	/**
+	 * @param mchName
+	 *            the mchName to set
+	 */
+	public void setMchName(String mchName) {
+		this.mchName = mchName;
+	}
+
+	/**
+	 * @return the transNo
+	 */
+	public String getTransNo() {
+		return transNo;
+	}
+
+	/**
+	 * @param transNo
+	 *            the transNo to set
+	 */
+	public void setTransNo(String transNo) {
+		this.transNo = transNo;
+	}
+
+	/**
+	 * @return the transDate
+	 */
+	public String getTransDate() {
+		return transDate;
+	}
+
+	/**
+	 * @param transDate
+	 *            the transDate to set
+	 */
+	public void setTransDate(String transDate) {
+		this.transDate = transDate;
+	}
+
+	/**
+	 * @return the subject
+	 */
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject
+	 *            the subject to set
+	 */
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	/**
+	 * @return the tradeNo
+	 */
+	public String getTradeNo() {
+		return tradeNo;
+	}
+
+	/**
+	 * @param tradeNo
+	 *            the tradeNo to set
+	 */
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
+
+	/**
+	 * @return the orderDate
+	 */
+	public String getOrderDate() {
+		return orderDate;
+	}
+
+	/**
+	 * @param orderDate
+	 *            the orderDate to set
+	 */
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	/**
+	 * @return the callbackUrl
+	 */
+	public String getCallbackUrl() {
+		return callbackUrl;
+	}
+
+	/**
+	 * @param callbackUrl
+	 *            the callbackUrl to set
+	 */
+	public void setCallbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
+	}
+
+	/**
+	 * @return the notifyUrl
+	 */
+	public String getNotifyUrl() {
+		return notifyUrl;
+	}
+
+	/**
+	 * @param notifyUrl
+	 *            the notifyUrl to set
+	 */
+	public void setNotifyUrl(String notifyUrl) {
+		this.notifyUrl = notifyUrl;
+	}
+
+	/**
+	 * @return the agentNo
+	 */
+	public String getAgentNo() {
+		return agentNo;
+	}
+
+	/**
+	 * @param agentNo
+	 *            the agentNo to set
+	 */
+	public void setAgentNo(String agentNo) {
+		this.agentNo = agentNo;
+	}
+
+	/**
+	 * @return the price
+	 */
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	/**
+	 * @param price
+	 *            the price to set
+	 */
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	/**
+	 * @return the feeRatio
+	 */
+	public BigDecimal getFeeRatio() {
+		return feeRatio;
+	}
+
+	/**
+	 * @param feeRatio
+	 *            the feeRatio to set
+	 */
+	public void setFeeRatio(BigDecimal feeRatio) {
+		this.feeRatio = feeRatio;
+	}
+
+	/**
+	 * @return the addFeeAmt
+	 */
+	public BigDecimal getAddFeeAmt() {
+		return addFeeAmt;
+	}
+
+	/**
+	 * @param addFeeAmt
+	 *            the addFeeAmt to set
+	 */
+	public void setAddFeeAmt(BigDecimal addFeeAmt) {
+		this.addFeeAmt = addFeeAmt;
+	}
+
+	/**
+	 * @return the subUserFee
+	 */
+	public BigDecimal getSubUserFee() {
+		return subUserFee;
+	}
+
+	/**
+	 * @param subUserFee
+	 *            the subUserFee to set
+	 */
+	public void setSubUserFee(BigDecimal subUserFee) {
+		this.subUserFee = subUserFee;
+	}
+
+	/**
+	 * @return the downRealPrice
+	 */
+	public BigDecimal getDownRealPrice() {
+		return downRealPrice;
+	}
+
+	/**
+	 * @param downRealPrice
+	 *            the downRealPrice to set
+	 */
+	public void setDownRealPrice(BigDecimal downRealPrice) {
+		this.downRealPrice = downRealPrice;
+	}
+
+	/**
+	 * @return the merchantFee
+	 */
+	public BigDecimal getMerchantFee() {
+		return merchantFee;
+	}
+
+	/**
+	 * @param merchantFee
+	 *            the merchantFee to set
+	 */
+	public void setMerchantFee(BigDecimal merchantFee) {
+		this.merchantFee = merchantFee;
+	}
+
+	/**
+	 * @return the agtProfitAmt
+	 */
+	public BigDecimal getAgtProfitAmt() {
+		return agtProfitAmt;
+	}
+
+	/**
+	 * @param agtProfitAmt
+	 *            the agtProfitAmt to set
+	 */
+	public void setAgtProfitAmt(BigDecimal agtProfitAmt) {
+		this.agtProfitAmt = agtProfitAmt;
+	}
+
+	/**
+	 * @return the profit
+	 */
+	public BigDecimal getProfit() {
+		return profit;
+	}
+
+	/**
+	 * @param profit
+	 *            the profit to set
+	 */
+	public void setProfit(BigDecimal profit) {
+		this.profit = profit;
+	}
+
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	/**
+	 * @param userName
+	 *            the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	/**
+	 * @return the userCertId
+	 */
+	public String getUserCertId() {
+		return userCertId;
+	}
+
+	/**
+	 * @param userCertId
+	 *            the userCertId to set
+	 */
+	public void setUserCertId(String userCertId) {
+		this.userCertId = userCertId;
+	}
+
+	/**
+	 * @return the userPhone
+	 */
+	public String getUserPhone() {
+		return userPhone;
+	}
+
+	/**
+	 * @param userPhone
+	 *            the userPhone to set
+	 */
+	public void setUserPhone(String userPhone) {
+		this.userPhone = userPhone;
+	}
+
+	/**
+	 * @return the merResv1
+	 */
+	public String getMerResv1() {
+		return merResv1;
+	}
+
+	/**
+	 * @param merResv1
+	 *            the merResv1 to set
+	 */
+	public void setMerResv1(String merResv1) {
+		this.merResv1 = merResv1;
+	}
+
+	/**
+	 * @return the merResv2
+	 */
+	public String getMerResv2() {
+		return merResv2;
+	}
+
+	/**
+	 * @param merResv2
+	 *            the merResv2 to set
+	 */
+	public void setMerResv2(String merResv2) {
+		this.merResv2 = merResv2;
+	}
+
+	/**
+	 * @return the upTransNo
+	 */
+	public String getUpTransNo() {
+		return upTransNo;
+	}
+
+	/**
+	 * @param upTransNo
+	 *            the upTransNo to set
+	 */
+	public void setUpTransNo(String upTransNo) {
+		this.upTransNo = upTransNo;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public EnumOrderStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(EnumOrderStatus status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the statusDesc
+	 */
+	public String getStatusDesc() {
+		return statusDesc;
+	}
+
+	/**
+	 * @param statusDesc
+	 *            the statusDesc to set
+	 */
+	public void setStatusDesc(String statusDesc) {
+		this.statusDesc = statusDesc;
+	}
+
+	/**
+	 * @return the fundStatus
+	 */
+	public EnumOrderStatus getFundStatus() {
+		return fundStatus;
+	}
+
+	/**
+	 * @param fundStatus
+	 *            the fundStatus to set
+	 */
+	public void setFundStatus(EnumOrderStatus fundStatus) {
+		this.fundStatus = fundStatus;
+	}
+
+	/**
+	 * @return the fundStatusDesc
+	 */
+	public String getFundStatusDesc() {
+		return fundStatusDesc;
+	}
+
+	/**
+	 * @param fundStatusDesc
+	 *            the fundStatusDesc to set
+	 */
+	public void setFundStatusDesc(String fundStatusDesc) {
+		this.fundStatusDesc = fundStatusDesc;
+	}
+
+	/**
+	 * @return the fundChgDate
+	 */
+	public Date getFundChgDate() {
+		return fundChgDate;
+	}
+
+	/**
+	 * @param fundChgDate
+	 *            the fundChgDate to set
+	 */
+	public void setFundChgDate(Date fundChgDate) {
+		this.fundChgDate = fundChgDate;
+	}
+
+	/**
+	 * @return the payLink
+	 */
+	public String getPayLink() {
+		return payLink;
+	}
+
+	/**
+	 * @param payLink
+	 *            the payLink to set
+	 */
+	public void setPayLink(String payLink) {
+		this.payLink = payLink;
+	}
+
+}

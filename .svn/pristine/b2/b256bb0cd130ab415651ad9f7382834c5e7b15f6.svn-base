@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<definition extends="mf" name="/directpay/index">
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/index.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+		<put-list-attribute name="scripts">
+			<add-attribute value="/resources/js/jquery/validate/jquery.validate.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/additional-methods.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/messages_zh.js" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="mf" name="/directpay/result">
+		<put-attribute name="title" value="支付结果" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/result.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="mf" name="/directpay/transit">
+		<put-attribute name="title" value="正在发起支付" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/transit.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="mf" name="/directpay/verify">
+		<put-attribute name="title" value="身份验证" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/verify.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+		<put-list-attribute name="scripts">
+			<add-attribute value="/resources/js/jquery/validate/jquery.validate.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/additional-methods.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/messages_zh.js" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="mf" name="/directpay/bind">
+		<put-attribute name="title" value="开通快捷" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/bind.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+		<put-list-attribute name="scripts">
+			<add-attribute value="/resources/js/jquery/validate/jquery.validate.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/additional-methods.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/messages_zh.js" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="mf" name="/directpay/directpay">
+		<put-attribute name="title" value="" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/directpay.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+		<put-list-attribute name="scripts">
+			<add-attribute value="/resources/js/jquery/validate/jquery.validate.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/additional-methods.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/messages_zh.js" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="mf" name="/directpay/bindresult">
+		<put-attribute name="title" value="开通快捷结果" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/bindresult.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="empty" name="/directpay/html">
+		<put-attribute name="title" value="正在发起支付" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/html.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="empty" name="/directpay/weird_jssy">
+		<put-attribute name="title" value="正在发起支付" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/weird_jssy.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="mf" name="/directpay/error">
+		<put-attribute name="title" value="处理失败" />
+		<put-attribute name="body" value="/WEB-INF/views/directpay/error.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+		<put-list-attribute name="scripts">
+			<add-attribute value="/resources/js/jquery/validate/jquery.validate.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/additional-methods.min.js" />
+			<add-attribute value="/resources/js/jquery/validate/messages_zh.js" />
+		</put-list-attribute>
+	</definition>
+</tiles-definitions>

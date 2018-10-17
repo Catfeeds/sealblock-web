@@ -1,0 +1,340 @@
+/******************************************************************************
+ *                                                                             
+ *                      Woodare PROPRIETARY INFORMATION                        
+ *                                                                             
+ *          The information contained herein is proprietary to Woodare         
+ *           and shall not be reproduced or disclosed in whole or in part      
+ *                    or used for any design or manufacture                    
+ *              without direct written authorization from FengDa.              
+ *                                                                             
+ *            Copyright (c) 2013 by Woodare.  All rights reserved.             
+ *                                                                             
+ *****************************************************************************/
+package com.woodare.template.jpa.model;
+
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Index;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import com.woodare.core.base.AbstractBusiModel;
+import com.woodare.framework.annotation.EntityDescriptor;
+import com.woodare.template.jpa.model.data.EnumDownUserStatus;
+import com.woodare.template.jpa.model.data.EnumFundAccountType;
+
+/**
+ * ClassName: DownMerchantFundAccount
+ * 唯一索引：mchNo + settleDate
+ * 索引：settleDate
+ * 
+ * @description
+ * @author Luke
+ * @Date Oct 15, 2018
+ */
+@Entity
+@EntityDescriptor(name = "机构货币账户", category = "content")
+@Table(
+		// 联合唯一索引键
+		uniqueConstraints = {
+				// 机构号 + 币
+				@UniqueConstraint(columnNames = { "mch_no", "coin" }) },
+		// 清算时间
+		indexes = { @Index(columnList = "change_date") })
+public class DownMerchantFundAccount extends AbstractBusiModel {
+	private static final long serialVersionUID = -7312844222902605851L;
+
+	/** 账户类别 */
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private EnumFundAccountType accountType;
+
+	/** 机构编号 */
+	@Column(name = "mch_no", length = 20, nullable = false)
+	private String mchNo;
+
+	/** 姓名 */
+	@Column(length = 100, nullable = false)
+	private String mchName;
+
+	/** 币标识, eth, usdt */
+	@Column(name = "coin", length = 10, nullable = false)
+	private String coin;
+
+	/** 币名称 */
+	@Column(length = 20)
+	private String coinName;
+
+	/** 交易费率，单位：千分之 */
+	@Column(scale = 2, precision = 5, nullable = false)
+	private BigDecimal feeRatio;
+
+	/** 交易手续费，单位：固定值 */
+	@Column(scale = 8, precision = 12, nullable = false)
+	private BigDecimal addFeeAmt;
+
+	/** 状态 */
+	@Enumerated(EnumType.STRING)
+	private EnumDownUserStatus status;
+
+	/** 期初余额 */
+	@Column(scale = 8, precision = 18, nullable = false)
+	private BigDecimal lastSettleAmt;
+
+	/** 账户余额 */
+	@Column(scale = 8, precision = 18, nullable = false)
+	private BigDecimal settleInAmt;
+
+	/** 清算金额 */
+	@Column(scale = 8, precision = 18, nullable = false)
+	private BigDecimal settleOutAmt;
+
+	/** 冻结金额 */
+	@Column(scale = 8, precision = 18, nullable = false)
+	private BigDecimal frozenAmt;
+
+	/** 当日入账额 */
+	@Column(scale = 8, precision = 18, nullable = false)
+	private BigDecimal curInAmt;
+
+	/** 提现金额 */
+	@Column(scale = 8, precision = 18, nullable = false)
+	private BigDecimal curOutAmt;
+
+	/** 变动日期 */
+	@Column(name = "change_date", length = 8, nullable = false)
+	private String changeDate;
+
+	// /** 会计日期 */
+	// @Column(name = "settle_date", length = 8)
+	// private String settleDate;
+	/**
+	 * @return the accountType
+	 */
+	public EnumFundAccountType getAccountType() {
+		return accountType;
+	}
+
+	/**
+	 * @param accountType
+	 *            the accountType to set
+	 */
+	public void setAccountType(EnumFundAccountType accountType) {
+		this.accountType = accountType;
+	}
+
+	/**
+	 * @return the feeRatio
+	 */
+	public BigDecimal getFeeRatio() {
+		return feeRatio;
+	}
+
+	/**
+	 * @param feeRatio
+	 *            the feeRatio to set
+	 */
+	public void setFeeRatio(BigDecimal feeRatio) {
+		this.feeRatio = feeRatio;
+	}
+
+	/**
+	 * @return the addFeeAmt
+	 */
+	public BigDecimal getAddFeeAmt() {
+		return addFeeAmt;
+	}
+
+	/**
+	 * @param addFeeAmt
+	 *            the addFeeAmt to set
+	 */
+	public void setAddFeeAmt(BigDecimal addFeeAmt) {
+		this.addFeeAmt = addFeeAmt;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public EnumDownUserStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(EnumDownUserStatus status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the mchNo
+	 */
+	public String getMchNo() {
+		return mchNo;
+	}
+
+	/**
+	 * @param mchNo
+	 *            the mchNo to set
+	 */
+	public void setMchNo(String mchNo) {
+		this.mchNo = mchNo;
+	}
+
+	/**
+	 * @return the mchName
+	 */
+	public String getMchName() {
+		return mchName;
+	}
+
+	/**
+	 * @param mchName
+	 *            the mchName to set
+	 */
+	public void setMchName(String mchName) {
+		this.mchName = mchName;
+	}
+
+	/**
+	 * @return the coin
+	 */
+	public String getCoin() {
+		return coin;
+	}
+
+	/**
+	 * @param coin
+	 *            the coin to set
+	 */
+	public void setCoin(String coin) {
+		this.coin = coin;
+	}
+
+	/**
+	 * @return the coinName
+	 */
+	public String getCoinName() {
+		return coinName;
+	}
+
+	/**
+	 * @param coinName
+	 *            the coinName to set
+	 */
+	public void setCoinName(String coinName) {
+		this.coinName = coinName;
+	}
+
+	/**
+	 * @return the lastSettleAmt
+	 */
+	public BigDecimal getLastSettleAmt() {
+		return lastSettleAmt;
+	}
+
+	/**
+	 * @param lastSettleAmt
+	 *            the lastSettleAmt to set
+	 */
+	public void setLastSettleAmt(BigDecimal lastSettleAmt) {
+		this.lastSettleAmt = lastSettleAmt;
+	}
+
+	/**
+	 * @return the settleInAmt
+	 */
+	public BigDecimal getSettleInAmt() {
+		return settleInAmt;
+	}
+
+	/**
+	 * @param settleInAmt
+	 *            the settleInAmt to set
+	 */
+	public void setSettleInAmt(BigDecimal settleInAmt) {
+		this.settleInAmt = settleInAmt;
+	}
+
+	/**
+	 * @return the settleOutAmt
+	 */
+	public BigDecimal getSettleOutAmt() {
+		return settleOutAmt;
+	}
+
+	/**
+	 * @param settleOutAmt
+	 *            the settleOutAmt to set
+	 */
+	public void setSettleOutAmt(BigDecimal settleOutAmt) {
+		this.settleOutAmt = settleOutAmt;
+	}
+
+	/**
+	 * @return the frozenAmt
+	 */
+	public BigDecimal getFrozenAmt() {
+		return frozenAmt;
+	}
+
+	/**
+	 * @param frozenAmt
+	 *            the frozenAmt to set
+	 */
+	public void setFrozenAmt(BigDecimal frozenAmt) {
+		this.frozenAmt = frozenAmt;
+	}
+
+	/**
+	 * @return the curInAmt
+	 */
+	public BigDecimal getCurInAmt() {
+		return curInAmt;
+	}
+
+	/**
+	 * @param curInAmt
+	 *            the curInAmt to set
+	 */
+	public void setCurInAmt(BigDecimal curInAmt) {
+		this.curInAmt = curInAmt;
+	}
+
+	/**
+	 * @return the curOutAmt
+	 */
+	public BigDecimal getCurOutAmt() {
+		return curOutAmt;
+	}
+
+	/**
+	 * @param curOutAmt
+	 *            the curOutAmt to set
+	 */
+	public void setCurOutAmt(BigDecimal curOutAmt) {
+		this.curOutAmt = curOutAmt;
+	}
+
+	/**
+	 * @return the changeDate
+	 */
+	public String getChangeDate() {
+		return changeDate;
+	}
+
+	/**
+	 * @param changeDate
+	 *            the changeDate to set
+	 */
+	public void setChangeDate(String changeDate) {
+		this.changeDate = changeDate;
+	}
+
+}

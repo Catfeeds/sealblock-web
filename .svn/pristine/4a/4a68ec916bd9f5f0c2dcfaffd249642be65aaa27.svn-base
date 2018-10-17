@@ -1,0 +1,67 @@
+/******************************************************************************
+ *                                                                             
+ *                      Woodare PROPRIETARY INFORMATION                        
+ *                                                                             
+ *          The information contained herein is proprietary to Woodare         
+ *           and shall not be reproduced or disclosed in whole or in part      
+ *                    or used for any design or manufacture                    
+ *              without direct written authorization from FengDa.              
+ *                                                                             
+ *            Copyright (c) 2013 by Woodare.  All rights reserved.             
+ *                                                                             
+ *****************************************************************************/
+package com.woodare.template.jpa.persistence.persistence;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import com.woodare.framework.data.IPagedList;
+import com.woodare.framework.persistence.service.ISimpleDAO;
+import com.woodare.template.jpa.model.SubMerchantFundAccount;
+import com.woodare.template.jpa.persistence.data.submerchantfundaccount.SearchSubMerchantFundAccountData;
+import com.woodare.template.jpa.persistence.data.submerchantfundaccount.SubMerchantFundAccountData;
+
+/**
+ * ClassName: ISubMerchantFundAccountDAO
+ *
+ * @description
+ * @author woo_maven_auto_generate
+ * @Date 2018/10/15
+ */
+public interface ISubMerchantFundAccountDAO extends ISimpleDAO<SubMerchantFundAccount> {
+
+	IPagedList<SubMerchantFundAccount> searchItems(SearchSubMerchantFundAccountData searchData);
+
+	SubMerchantFundAccount findById(String id);
+
+	/**
+	 * @param userNo
+	 * @param coin
+	 * @return
+	 */
+	SubMerchantFundAccount findByUserNoAndCoin(String userNo, String coin);
+
+	/**
+	 * @param userNo
+	 * @param coins
+	 * @return
+	 */
+	List<SubMerchantFundAccount> findByUserNoAndCoins(String userNo, List<String> coins);
+
+	/**
+	 * @param item
+	 * @param id
+	 * @return
+	 */
+	int updateById(SubMerchantFundAccount item, String id);
+
+	/**
+	 * 变动当日余额
+	 */
+	int changeBalance(SubMerchantFundAccountData diffModel);
+
+	/**
+	 * 冻结账户余额
+	 */
+	int frozenBalance(BigDecimal frozenAmt, String userNo, String coin);
+}

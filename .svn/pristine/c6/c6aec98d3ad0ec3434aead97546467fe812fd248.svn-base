@@ -1,0 +1,60 @@
+#Updated at Wed Jan 16 13:26:13 CST 2013
+#Wed Feb 16 13:26:13 CST 2018
+#prod
+
+# enable api test
+server.position=A
+api.test=true
+
+run.timer.bill=true
+run.timer=true
+
+# Super administrator name & password, and password would be only used in first-time initialized
+super.account.name=admin
+super.account.password=admin
+
+# Copied from dynamic/static configuration
+root.base.url=http://api.intrackcom.com/dgateway
+root.resource.url=http://api.intrackcom.com/dgateway
+# the base url to access to image file
+root.base.url.alias=http://api.intrackcom.com/dgateway
+# the base url to access to image file
+root.imagesources.url=http://api.intrackcom.com/dgateway/uploads
+
+# Default the page size of each query
+default.data.paged.size=20
+
+# Uploaded file location
+root.uploadfiles.valid=uploads
+
+# Enable database properties configuration
+database.config.enable=true
+
+# Connection Information
+http.ConnectionTimeOut=5000
+http.Retry=1
+http.ReadTimeOut=30000
+http.MaxConnection=100
+
+#Used for YeePay
+uploads.dir=/opt/apps/woo-web-template
+
+
+###########################################################
+### Quantization Configuration on binance ------- Starting
+exchange.quantization.bnb.apikey=9S0JGF5f9amBHM2PfuluO9OW34r4nhElvaTv7FYsCU6W7nSYUAqZfG5QCBSfhPIj
+exchange.quantization.bnb.apisecret=gg3xnfGKPkOkNig0GusOAbSnVYSqD8c3Q97Rx5QIqoo0NkdYA9nfvcsn0SbWKkBA
+
+exchange.quantization.xtra.apikey=dvYqGzSMswUrLnoejUICrpnItiL0htEGVzdPo4kYHldrJpAUhmiBs629ovDLnxtB
+exchange.quantization.xtra.apisecret=svYx3f5uenwY1EMdAgNgYP5zHUDTvzj5rhbrGp5ZGTcjFbpzR1vMtInLfrzxG8gk
+
+exchange.quantization.common.start.clean=true
+exchange.quantization.common.websocket=true
+exchange.quantization.common.waitseconds=200
+exchange.quantization.common.depthsize=20
+exchange.quantization.common.prod=true
+# Binance the min-duration, ignore too-quickly agg trade event
+binance.websocket.aggtrade.duration=3000
+sync.symbol.order.size=true
+### Quantization Configuration on binance ------- Ending
+###########################################################

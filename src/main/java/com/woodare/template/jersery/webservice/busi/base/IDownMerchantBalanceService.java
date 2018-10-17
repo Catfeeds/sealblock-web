@@ -1,0 +1,67 @@
+package com.woodare.template.jersery.webservice.busi.base;
+
+import com.thirdparty.passway._data.PasswayResponseData;
+import com.woodare.framework.exception.MessageWooException;
+import com.woodare.template.jpa.model.DownMerchantDeposit;
+import com.woodare.template.jpa.model.DownNoCardInvoice;
+
+/**
+ * 机构收支明细处理服务
+ * 
+ * @author Luke
+ */
+public interface IDownMerchantBalanceService {
+
+	/**
+	 * 交易收支记账
+	 * 
+	 * @param invoice
+	 * @param direction 1 表示【结算】；-1表示【撤销】
+	 * @param remark 事由明细
+	 * @return
+	 * @throws MessageWooException
+	 */
+	boolean recordInvoice(DownNoCardInvoice invoice, int direction, String remark) throws MessageWooException;
+
+	/**
+	 * 代付收支记账
+	 * 
+	 * @param deposit
+	 * @param direction 1 表示【结算】；-1表示【撤销】
+	 * @param remark 事由明细
+	 * @return
+	 * @throws Exception
+	 */
+	boolean recordDeposit(DownMerchantDeposit deposit, int direction, String remark) throws MessageWooException;
+
+	/**
+	 * 处理快捷代付结果
+	 * 
+	 * @param oriModel
+	 * @param respData
+	 * @return
+	 * @throws MessageWooException
+	 */
+	DownMerchantDeposit handleDepositResult(DownMerchantDeposit oriModel, PasswayResponseData respData) throws MessageWooException;
+
+	/**
+	 * 处理快捷交易结果
+	 * 
+	 * @param oriModel
+	 * @param respData
+	 * @return
+	 * @throws MessageWooException
+	 */
+	DownNoCardInvoice handleInvoiceOrderResult(DownNoCardInvoice oriModel, PasswayResponseData respData) throws MessageWooException;
+	
+	/**
+	 * 结算统计记账
+	 * 
+	 * @param mchNo
+	 * @param startOfDay
+	 * @param endOfDay
+	 * @return
+	 * @throws Exception
+	 */
+	boolean recordSettle() throws Exception;
+}

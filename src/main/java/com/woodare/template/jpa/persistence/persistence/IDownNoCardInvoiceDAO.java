@@ -1,0 +1,56 @@
+/******************************************************************************
+ *                                                                             
+ *                      Woodare PROPRIETARY INFORMATION                        
+ *                                                                             
+ *          The information contained herein is proprietary to Woodare         
+ *           and shall not be reproduced or disclosed in whole or in part      
+ *                    or used for any design or manufacture                    
+ *              without direct written authorization from FengDa.              
+ *                                                                             
+ *            Copyright (c) 2013 by Woodare.  All rights reserved.             
+ *                                                                             
+ *****************************************************************************/
+package com.woodare.template.jpa.persistence.persistence;
+
+import java.util.Date;
+import java.util.List;
+
+import com.woodare.framework.data.IPagedList;
+import com.woodare.framework.persistence.service.ISimpleDAO;
+import com.woodare.template.jpa.model.DownNoCardInvoice;
+import com.woodare.template.jpa.persistence.data.downnocardinvoice.DownNoCardInvoiceData;
+import com.woodare.template.jpa.persistence.data.downnocardinvoice.DownNoCardInvoiceSumData;
+import com.woodare.template.jpa.persistence.data.downnocardinvoice.DownNoCardInvoiceUpSumData;
+import com.woodare.template.jpa.persistence.data.downnocardinvoice.SearchDownNoCardInvoiceData;
+
+/**
+ * 
+ * @author Luke
+ *
+ */
+public interface IDownNoCardInvoiceDAO extends ISimpleDAO<DownNoCardInvoice> {
+
+	IPagedList<DownNoCardInvoice> searchDownNoCardInvoices(SearchDownNoCardInvoiceData searchData);
+
+	DownNoCardInvoice findByTradeNoAndMchNo(String tradeNo, String mchNo);
+
+	DownNoCardInvoice findByTransNo(String transNo);
+
+	List<DownNoCardInvoice> findNeedCheckByStatusChgDate(Date start, Date end);
+	
+	int updateSelectiveByCons(DownNoCardInvoiceData values, DownNoCardInvoiceData cons);
+	
+	List<DownNoCardInvoiceSumData> sumInvoice(SearchDownNoCardInvoiceData searchData);
+
+	List<DownNoCardInvoiceUpSumData> upSumInvoice(SearchDownNoCardInvoiceData searchData);
+	
+	/**
+	 * 查询机构指定日期下的汇总统计
+	 * 
+	 * @param mchNo
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	DownNoCardInvoiceSumData sumMchByStatusChgDate(String mchNo, Date startDate, Date endDate);
+}

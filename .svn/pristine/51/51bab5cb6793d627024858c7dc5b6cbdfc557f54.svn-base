@@ -1,0 +1,287 @@
+/******************************************************************************
+ *                                                                             
+ *                      Woodare PROPRIETARY INFORMATION                        
+ *                                                                             
+ *          The information contained herein is proprietary to Woodare         
+ *           and shall not be reproduced or disclosed in whole or in part      
+ *                    or used for any design or manufacture                    
+ *              without direct written authorization from FengDa.              
+ *                                                                             
+ *            Copyright (c) 2013 by Woodare.  All rights reserved.             
+ *                                                                             
+ *****************************************************************************/
+package com.woodare.template.jersery.webservice.busi;
+
+import java.util.Date;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.warrenstrange.googleauth.GoogleAuthenticator;
+import com.woodare.core.component.sms.ISmsService;
+import com.woodare.core.util.SDFFactory;
+import com.woodare.framework.exception.RollbackMessageWooException;
+import com.woodare.template.helper.cache.DownMerchants;
+import com.woodare.template.jersery.servicedata.downnocardinvoice.DownNoCardInvoiceServiceData;
+import com.woodare.template.jersery.webservice.busi.base.IDownNoCardInvoiceService;
+import com.woodare.template.jersery.webservice.busi.base.IFundAccountService;
+import com.woodare.template.jpa.model.DownNoCardInvoice;
+import com.woodare.template.jpa.model.NotifyRecord;
+import com.woodare.template.jpa.model.SubMerchant;
+import com.woodare.template.jpa.model.data.EnumOrderStatus;
+import com.woodare.template.jpa.persistence.data.downmerchant.DownMerchantData;
+import com.woodare.template.jpa.persistence.data.downnocardinvoice.DownNoCardInvoiceData;
+import com.woodare.template.jpa.persistence.persistence.IDownNoCardInvoiceDAO;
+
+/**
+ * ClassName: DownNoCardInvoiceService
+ * 
+ * @description
+ * @author Luke
+ * @Date Feb 27, 2018
+ */
+@Service(value = "downNoCardInvoiceService")
+public class DownNoCardInvoiceService extends AbstractInvoiceService implements IDownNoCardInvoiceService {
+	private Log log = LogFactory.getLog(DownNoCardInvoiceService.class);
+	//
+	// @Autowired
+	// private ISubMerchantFundAccountDAO subMerchantFundAccountDAO;
+
+	@Autowired
+	private ISmsService smsService;
+
+	@Autowired
+	private IDownNoCardInvoiceDAO downNoCardInvoiceDAO;
+
+	@Autowired
+	private IFundAccountService fundAccountService;
+	//
+	// @Autowired
+	// private IDownNoCardInvoiceExtraDAO downNoCardInvoiceExtraDAO;
+
+	@Override
+	public DownNoCardInvoice makeOrder(DownNoCardInvoiceServiceData reqData, DownMerchantData downMerchant, SubMerchant subMerchant) throws Exception {
+		DownNoCardInvoice model = new DownNoCardInvoice();
+
+		Date nowTime = new Date();
+
+		// 公链类型
+		model.setChannel(reqData.getChannel());
+		// 币标识, eth, usdt
+		model.setCoin(reqData.getCoin());
+		// 币名称
+		model.setCoinName(reqData.getCoinName());
+		// 商户号
+		model.setMchNo(downMerchant.getMchNo());
+		// 商户名
+		model.setMchName(downMerchant.getName());
+		// 平台流水号
+		model.setTransNo(SDFFactory.getOrderNo());
+		// 平台日期yyyyMMdd
+		model.setTransDate(SDFFactory.DATE.format(nowTime));
+		// 商品标题
+		model.setSubject(reqData.getSubject());
+		// 下游交易流水号
+		model.setTradeNo(reqData.getTradeNo());
+		// 订单时间, 格式：yyyyMMddHHmmss
+		model.setOrderDate(reqData.getOrderDate());
+		// 同步回调地址
+		model.setCallbackUrl(reqData.getCallbackUrl());
+		// 异步通知地址
+		model.setNotifyUrl(reqData.getNotifyUrl());
+		// 代理商
+		model.setAgentNo(downMerchant.getAgentNo() != null ? downMerchant.getAgentNo() : "0");
+		// 交易额
+		model.setPrice(reqData.getPrice());
+		// 机构交易费率，单位：千分之
+		model.setFeeRatio(reqData.getFeeRatio());
+		// 机构单笔手续费，单位：固定值
+		model.setAddFeeAmt(reqData.getAddFeeAmt());
+		// 商户清算金额
+		model.setDownRealPrice(reqData.getDownRealPrice());
+		// 机构交易手续费
+		model.setMerchantFee(reqData.getMerchantFee());
+		// 代理商利润
+		model.setAgtProfitAmt(reqData.getAgtProfitAmt());
+		// 平台利润
+		model.setProfit(reqData.getProfit());
+		// 用户ID
+		model.setUserNo(subMerchant.getUserNo());
+		// 用户姓名
+		model.setUserName(subMerchant.getUserName());
+		// 用户身份证号
+		model.setUserCertId(subMerchant.getUserCertId());
+		// 用户联系电话
+		model.setUserPhone(subMerchant.getUserPhone());
+		// 交易状态
+		model.setStatus(EnumOrderStatus.CREATE);
+		// 交易状态描述
+		model.setStatusDesc("未处理");
+		// 状态更新时间
+		model.setStatusChgDate(nowTime);
+		// 公网交易状态
+		model.setFundStatus(EnumOrderStatus.CREATE);
+		// 公网状态描述, fundStatusDesc;
+		// 公网更新时间
+		model.setFundChgDate(nowTime);
+		// 支付链接, payLink;
+		// 保留缺省域1, merResv1, 存入用户的谷歌验签Key
+		model.setMerResv1(subMerchant.getGoogleSecret());
+		// 保留缺省域2, merResv2;
+		// 上游流水号, upTransNo
+		// 用户交易手续费, model.setSubUserFee(reqData.getSubUserFee());
+		// 暂存下来，待用户实际访问页面时，再进行渠道下单操作
+		this.downNoCardInvoiceDAO.saveForce(model);
+
+		// 发起短信确认
+		GoogleAuthenticator gAuth = new GoogleAuthenticator();
+		int smsCode = gAuth.getTotpPassword(subMerchant.getGoogleSecret());
+
+		boolean flag = smsService.sendSms(model.getUserPhone(), smsCode);
+		if (flag) {
+			model.setStatus(EnumOrderStatus.PROCESSING);
+			model.setStatusDesc("短信已发送");
+		}
+		else {
+			model.setStatus(EnumOrderStatus.FAIL);
+			model.setStatusDesc("短信未送达");
+		}
+		model.setStatusChgDate(new Date());
+		this.downNoCardInvoiceDAO.updateForce(model);
+
+		// 返回数据
+		return model;
+	}
+
+	@Override
+	public DownNoCardInvoice resendSms(DownNoCardInvoiceServiceData reqData, DownNoCardInvoice model) throws Exception {
+		// 发起短信确认
+		GoogleAuthenticator gAuth = new GoogleAuthenticator();
+		int smsCode = gAuth.getTotpPassword(model.getMerResv1());
+
+		boolean flag = smsService.sendSms(model.getUserPhone(), smsCode);
+
+		DownNoCardInvoiceData conModel = new DownNoCardInvoiceData();
+		conModel.setId(model.getId());
+		conModel.setStatus(model.getStatus());
+
+		DownNoCardInvoiceData newModel = new DownNoCardInvoiceData();
+		if (flag) {
+			newModel.setStatus(EnumOrderStatus.PROCESSING);
+			newModel.setStatusDesc("短信已发送");
+		}
+		else {
+			newModel.setStatus(EnumOrderStatus.FAIL);
+			newModel.setStatusDesc("短信发送失败");
+		}
+		newModel.setStatusChgDate(new Date());
+		// 更新数据
+		int effectRow = this.downNoCardInvoiceDAO.updateSelectiveByCons(newModel, conModel);
+		if (effectRow == 0) {
+			log.info(String.format("ResendSmsErr[NoDataUpdate]%s->%s", model.getMchNo(), model.getTransNo()));
+		}
+		// 刷新数据
+		model = this.downNoCardInvoiceDAO.findOne(model.getId());
+
+		// 返回数据
+		return model;
+	}
+
+	@Override
+	public DownNoCardInvoice confirmOrder(DownNoCardInvoiceServiceData reqData, DownNoCardInvoice model) throws Exception {
+		// 发起短信确认
+		GoogleAuthenticator gAuth = new GoogleAuthenticator();
+		if (gAuth.authorize(model.getMerResv1(), Integer.parseInt(reqData.getSmsCode()))) {
+			DownMerchantData downMerchant = DownMerchants.getByMchNo(model.getMchNo());
+			model = fundAccountService.settleInvoice(model, downMerchant);
+		}
+		else {
+			int times = 1;
+			String statusDesc = model.getStatusDesc();
+			if (statusDesc != null && statusDesc.startsWith("验证失败")) {
+				times = Integer.parseInt(statusDesc.substring("验证失败".length(), "验证失败".length() + 1)) + 1;
+			}
+
+			DownNoCardInvoiceData conModel = new DownNoCardInvoiceData();
+			conModel.setId(model.getId());
+			conModel.setStatus(model.getStatus());
+
+			DownNoCardInvoiceData newModel = new DownNoCardInvoiceData();
+			if (times >= 3) {
+				log.info(String.format("ConfirmOrderErr[WrongTooMany]%s->%s", model.getMchNo(), model.getTransNo()));
+
+				// 交易状态描述
+				newModel.setStatus(EnumOrderStatus.FAIL);
+				// 交易状态描述
+				newModel.setStatusDesc("验证3次失败");
+			}
+			else {
+				// 交易状态描述
+				newModel.setStatus(EnumOrderStatus.PROCESSING);
+				// 交易状态描述
+				newModel.setStatusDesc("验证失败" + times + "次");
+			}
+			// 状态更新时间
+			newModel.setStatusChgDate(new Date());
+			// 更新数据
+			int effectRow = this.downNoCardInvoiceDAO.updateSelectiveByCons(newModel, conModel);
+			if (effectRow == 0) {
+				log.info(String.format("ConfirmOrderErr[NoDataUpdate]%s->%s", model.getMchNo(), model.getTransNo()));
+				throw new RollbackMessageWooException("数据异常，请查证确认数据状态");
+			}
+
+			// 刷新数据
+			model = this.downNoCardInvoiceDAO.findOne(model.getId());
+		}
+
+		// 返回数据
+		return model;
+	}
+
+	/**
+	 * 渠道交易状态查验操作
+	 * 
+	 * @param downInvoice
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public DownNoCardInvoice orderQuery(DownNoCardInvoice downInvoice, boolean refreshFlag) throws Exception {
+		throw new Exception("");
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public String getDownNotifyData(NotifyRecord record) throws Exception {
+		throw new Exception("");
+	}
+
+	/**
+	 * 拼装返回数据结构
+	 * 
+	 * @param model
+	 * @return
+	 */
+	public static DownNoCardInvoiceServiceData toServiceData(DownNoCardInvoiceServiceData reqData, DownNoCardInvoice model) {
+		DownNoCardInvoiceServiceData isd = new DownNoCardInvoiceServiceData();
+
+		isd.setMchNo(model.getMchNo());
+		isd.setMchName(model.getMchName());
+		isd.setTransNo(model.getTransNo());
+		isd.setPrice(model.getPrice());
+		isd.setSubject(model.getSubject());
+		isd.setTradeNo(model.getTradeNo());
+		isd.setOrderDate(model.getOrderDate());
+		isd.setStatus(model.getStatus());
+		isd.setStatusDesc(model.getStatusDesc());
+		// TODO: 考虑是否需要返回
+		isd.setFundStatus(model.getFundStatus());
+		// isd.setFundStatusDesc(fundStatusDesc);
+
+		return isd;
+	}
+}
