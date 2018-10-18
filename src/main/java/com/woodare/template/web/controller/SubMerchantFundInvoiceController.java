@@ -47,7 +47,7 @@ import com.woodare.template.web.viewdata.submerchantfundinvoice.SubMerchantFundI
  * 
  */
 @Controller
-@RequestMapping("/content/subMerchantFundInvoice")
+@RequestMapping("/admin/subMerchantFundInvoice")
 public class SubMerchantFundInvoiceController extends BaseController {
 	private static Logger log = Logger.getLogger(SubMerchantFundInvoiceController.class);
 
@@ -57,13 +57,13 @@ public class SubMerchantFundInvoiceController extends BaseController {
 	@Transactional(propagation = Propagation.NEVER)
 	@RequestMapping(value = "/index")
 	public ModelAndView index(SearchSubMerchantFundInvoiceViewData searchData) throws ControllerException {
-		return showIndex("/content/subMerchantFundInvoice/index", searchData);
+		return showIndex("/admin/subMerchantFundInvoice/index", searchData);
 	}
 
 	@Transactional(propagation = Propagation.NEVER)
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public ModelAndView add(SubMerchantFundInvoiceViewData searchData) throws ControllerException {
-		ModelAndView mav = new ModelAndView("/content/subMerchantFundInvoice/add");
+		ModelAndView mav = new ModelAndView("/admin/subMerchantFundInvoice/add");
 		SubMerchantFundInvoiceViewData item = null;
 		if (StringUtils.isNotEmpty(searchData.getId())) {
 			SubMerchantFundInvoice model = subMerchantFundInvoiceDAO.findOne(searchData.getId());
@@ -82,7 +82,7 @@ public class SubMerchantFundInvoiceController extends BaseController {
 
 		String error = validData(item);
 		if (StringUtils.isNotEmpty(error)) {
-			return alertFailed("/content/subMerchantFundInvoice/add", item, error);
+			return alertFailed("/admin/subMerchantFundInvoice/add", item, error);
 		}
 
 		if (StringUtils.isNotEmpty(item.getId())) {
@@ -96,7 +96,7 @@ public class SubMerchantFundInvoiceController extends BaseController {
 		} else {
 			this.subMerchantFundInvoiceDAO.save(model);
 		}
-		return alertSuccess("/content/subMerchantFundInvoice/add", convertDetails(model));
+		return alertSuccess("/admin/subMerchantFundInvoice/add", convertDetails(model));
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)

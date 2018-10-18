@@ -21,7 +21,7 @@
 		<td>电话</td>
 		<td>结算卡银行</td>
 		<td>结算卡卡号</td>
-		<td>开通产品</td>
+		<!-- <td>开通产品</td> -->
 		<td>创建时间</td>
 		<td>状态</td>
 		<td>操作</td>
@@ -43,9 +43,9 @@
 			<td>
 				<c:out value="${item.cardNo}" />
 			</td>
-			<td>
+			<%-- <td>
 				${item.productTypeSummary }
-			</td>
+			</td> --%>
 			<td>
 				<c:out value="${item.createDate}" />
 			</td>

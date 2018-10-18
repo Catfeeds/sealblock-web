@@ -65,16 +65,25 @@ public class DownMerchantFundAccountDAO extends AbstractPagedDAO<DownMerchantFun
 			conditions.add(new TypeCondition("ids", "a.id in (:ids)", searchData.getIds()));
 		}
 		if (StringUtils.isNotEmpty(searchData.getKeywords())) {
-			conditions.add(new TypeCondition("keywords", "(a.id like :keywords)", "%" + searchData.getKeywords() + "%"));
+			conditions.add(new TypeCondition("keywords", "(a.mchName like :keywords)", "%" + searchData.getKeywords() + "%"));
 		}
 		if (StringUtils.isNotEmpty(searchData.getChangeDate())) {
 			conditions.add(new TypeCondition("changeDate", "a.changeDate = :changeDate", searchData.getChangeDate()));
+		}
+		if (searchData.getStartDate() != null && searchData.getStartDate() != "") {
+			conditions.add(new TypeCondition("startDate","a.changeDate >= :startDate", searchData.getStartDate().toString().replaceAll("/", "")));
+		}
+		if(searchData.getEndDate() != null && searchData.getEndDate() != "") {
+			conditions.add(new TypeCondition("endDate","a.changeDate <= :endDate", searchData.getEndDate().toString().replaceAll("/", "")));
 		}
 		if (searchData.getStatus() != null) {
 			conditions.add(new TypeCondition("status", "a.status = :status", searchData.getStatus()));
 		}
 		if (searchData.getAccountType() != null) {
 			conditions.add(new TypeCondition("accountType", "a.accountType = :accountType", searchData.getAccountType()));
+		}
+		if(searchData.getCoinName() != null && searchData.getCoinName() != "") {
+			conditions.add(new TypeCondition("coinName", "a.coinName = :coinName", searchData.getCoinName()));
 		}
 
 		// Append conditions

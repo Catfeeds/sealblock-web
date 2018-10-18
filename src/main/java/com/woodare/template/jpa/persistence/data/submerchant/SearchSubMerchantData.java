@@ -33,6 +33,26 @@ public class SearchSubMerchantData extends AbstractPageData {
 	private List<String> ids;
 
 	private String keywords;
+	
+	private String startDate;
+	
+	private String endDate;
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 
 	public List<String> getIds() {
 		return ids;

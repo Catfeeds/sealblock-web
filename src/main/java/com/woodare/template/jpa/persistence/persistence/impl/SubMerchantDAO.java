@@ -62,10 +62,16 @@ public class SubMerchantDAO extends AbstractPagedDAO<SubMerchant> implements ISu
 		}
 		// change the key
 		if (StringUtils.isNotEmpty(searchData.getKeywords())) {
-			conditions.add(new TypeCondition("keywords", "(a.id like :keywords)", "%" + searchData.getKeywords() + "%"));
+			conditions.add(new TypeCondition("keywords", "(a.mchName like :keywords)", "%" + searchData.getKeywords() + "%"));
 		}
-		// TODO: add more conditions
-
+		
+/*		// TODO: add more conditions
+		if (searchData.getStartDate() != null && searchData.getStartDate() != "") {
+			conditions.add(new TypeCondition("startDate","a.authDate >= :startDate", searchData.getStartDate().replaceAll("/", "-")));
+		}
+		if(searchData.getEndDate() != null && searchData.getEndDate() != "") {
+			conditions.add(new TypeCondition("endDate","a.authDate <= :endDate", searchData.getEndDate().replaceAll("/", "-")));
+		}*/
 		// Append conditions
 		if (conditions != null && conditions.size() > 0) {
 			sql.append(" where ").append(this.joinConditions(conditions, " and "));

@@ -12,7 +12,21 @@ $(function(){
 	<div class="search-group">
 		<label for="keywords">关键字：</label>
 		<input type="text" class="input-box search-input-box" placeholder="关键字" name="keywords" value="${search.keywords}"></input>
+		
+<%-- 		<label for="changeDate">时间：</label>
+	<label for="startDate" class="custom-d-cate">From：</label>
+	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate" value="${search.startDate}">
+	<label for="endDate" class="custom-d-cate">To：</label>
+	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="结束时间" name="endDate" value="${search.endDate}">
+	
+	<script>
+		$(".date-picker").datepicker($.datepicker.regional[ "zh-CN" ]);
+		$("select[name='dateCate']").change(function(){
+			$(".custom-d-cate")[$(this).val() == 'CUSTOM' ? "show" : "hide"]();
+		}).change();
+	</script> --%>
 	</div>
+		
 	<input type="hidden" name="pageIndex" value="${search.pageIndex}"></input>
 	<input type="hidden" name="pageSize" value="${search.pageSize}"></input>
 	<input type="submit" value="搜索" class="btn"></input>
@@ -33,7 +47,7 @@ $(function(){
 		<td>鉴权状态</td>
 		<td>鉴权结果</td>
 		<td>鉴权日期</td>
-		<td>已开通币类型，多个逗号分隔开</td>
+		<td>已开通币类型</td>
 		<td>备用字段1</td>
 		<td>备用字段 2</td>
 		<td>操作</td>

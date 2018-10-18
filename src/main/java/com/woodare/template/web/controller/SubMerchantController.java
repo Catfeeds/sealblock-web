@@ -47,7 +47,7 @@ import com.woodare.template.web.viewdata.submerchant.SubMerchantViewData;
  * 
  */
 @Controller
-@RequestMapping("/content/subMerchant")
+@RequestMapping("/admin/subMerchant")
 public class SubMerchantController extends BaseController {
 	private static Logger log = Logger.getLogger(SubMerchantController.class);
 
@@ -57,13 +57,13 @@ public class SubMerchantController extends BaseController {
 	@Transactional(propagation = Propagation.NEVER)
 	@RequestMapping(value = "/index")
 	public ModelAndView index(SearchSubMerchantViewData searchData) throws ControllerException {
-		return showIndex("/content/subMerchant/index", searchData);
+		return showIndex("/admin/subMerchant/index", searchData);
 	}
 
 	@Transactional(propagation = Propagation.NEVER)
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public ModelAndView add(SubMerchantViewData searchData) throws ControllerException {
-		ModelAndView mav = new ModelAndView("/content/subMerchant/add");
+		ModelAndView mav = new ModelAndView("/admin/subMerchant/add");
 		SubMerchantViewData item = null;
 		if (StringUtils.isNotEmpty(searchData.getId())) {
 			SubMerchant model = subMerchantDAO.findOne(searchData.getId());
@@ -82,7 +82,7 @@ public class SubMerchantController extends BaseController {
 
 		String error = validData(item);
 		if (StringUtils.isNotEmpty(error)) {
-			return alertFailed("/content/subMerchant/add", item, error);
+			return alertFailed("/admin/subMerchant/add", item, error);
 		}
 
 		if (StringUtils.isNotEmpty(item.getId())) {
@@ -96,7 +96,7 @@ public class SubMerchantController extends BaseController {
 		} else {
 			this.subMerchantDAO.save(model);
 		}
-		return alertSuccess("/content/subMerchant/add", convertDetails(model));
+		return alertSuccess("/admin/subMerchant/add", convertDetails(model));
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)

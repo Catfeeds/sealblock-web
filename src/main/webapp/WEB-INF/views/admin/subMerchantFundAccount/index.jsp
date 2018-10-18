@@ -55,7 +55,7 @@ $(function(){
 				<c:out value="${item.userNo}" />
 			</td>
 			<td>
-				<c:out value="${item.currency}" />
+				<c:out value="${item.coin}" />
 			</td>
 			<td>
 				<c:out value="${item.address}" />
