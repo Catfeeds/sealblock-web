@@ -7,51 +7,6 @@
 <jsp:include page="/WEB-INF/views/iframe-status.jsp"/>
 
 <script type="text/javascript" src="<c:url value='/resources/js/common/jquery.md5.js' />"></script>
-<style>
-.input-box-short {
-	width:43%;
-}
-.liner-box-left {
-	padding: 2px 10px;
-}
-.liner-box-right {
-	padding: 0;
-}
-.ms-row .ms-border {
-    min-height: 220px;
-}
-.liner-box-left {
-    vertical-align: top;
-    color: #333;
-    font-family: 'Microsoft YaHei', Arial, Helvetica, sans-serif;
-    font-size: 0.9rem;
-        line-height: 34px;
-}
-
-.input-box, form label {
-    color: #333;
-    font-family: 'Microsoft YaHei', Arial, Helvetica, sans-serif;
-    font-size: 0.9rem;
-}
-.btn {
-    line-height: 30px;
-    padding: 0 10px;
-    /* margin: 0; */
-    height: 30px;
-}
-input.input-box[readonly], select.input-box[readonly] {
-	background-color: rgb(235, 235, 228);
-}
-td.special {
-background-color:#c35c7a;
-}
-</style>
-
-<link href="<c:url value='/resources/js/bootstrap/bootstrap-select.css' />" rel="stylesheet" type="text/css" />
-<link href="<c:url value='/resources/js/bootstrap/bootstrap.min.css' />" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<c:url value='/resources/js/bootstrap/bootstrap-select.js' />"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/bootstrap/bootstrap.min.js' />"></script>
-
 <form action="<c:url value="/admin/downMerchant/add" />" method="post">
 	<input type="hidden" name="id" value="${item.id}" />
 	
@@ -63,19 +18,17 @@ background-color:#c35c7a;
 	<div class="ms-row">
 		<c:if test="${not empty item.id }">
 		<div class="ms-row ms-border" style="margin: 0 0.5%;">
-			<div class="ms-header">配置产品</div>
+			<div class="ms-header">开通货币</div>
 			<c:if test="${not empty item.id }">
 				<table class="list-wapper" style="margin-bottom: 5px;">
 					<tr class="list-header">
 						<td width="110px">名称</td>
 						<td width="100px">交易费率(‰)</td>
-						<td width="100px">单笔费用(元)</td>
-						<td width="100px">垫资费率(‰)</td>
-						<td width="100px">单笔代付费(元)</td>
+						<td width="100px">单笔费用</td>
 						
-						<td class="special">单笔最小金额(元)</td>
+						<!-- <td class="special">单笔最小金额(元)</td>
 						<td class="special">单笔最大金额(元)</td>
-						<td class="special">日累计限额(元)</td>
+						<td class="special">日累计限额(元)</td> -->
 						<!-- <td>状态</td> -->
 					</tr>
 					<c:forEach var="item" items="${products}" varStatus="status">
@@ -87,23 +40,17 @@ background-color:#c35c7a;
 						</c:if>
 						<tr class="list-item">
 							<td width="110px">
-								<input type="hidden" name="productTypeArr" value="${item.productType }">
-								<input type="checkbox" ${checkflg }  class="input-check" style='width: 20px;' name="selProductTypeArr" id="productType${item.productType }" value="${item.productType }">
-								<label for="productType${item.productType }"><c:out value="${item.productType.desc }" /></label>
+								<input type="hidden" name="coinArr" value="${item.coin }">
+								<input type="checkbox" ${checkflg }  class="input-check" style='width: 20px;' name="selCoinArr" id="product${item.coin }" value="${item.coin }">
+								<label for="product${item.coin }"><c:out value="${item.coinName }" /><span style='font-weight:normal; color: #999;'>(<c:out value="${item.coinDescription }" />)</span></label>
 							</td>
 							<td width="100px">
 								<input type="text" ${inputflg } class="input-box" placeholder="单位：千分之" name="feeRatioArr" value="${item.feeRatio}" />
 							</td>
 							<td width="100px">
-								<input type="text" ${inputflg } class="input-box" placeholder="单位：元" name="addFeeAmtArr" value="${item.addFeeAmt}" />
+								<input type="text" ${inputflg } class="input-box" name="addFeeAmtArr" value="${item.addFeeAmt}" />
 							</td>
-							<td width="100px">
-								<input type="text" ${inputflg } class="input-box" placeholder="单位：千分之 " name="drawFeeRatioArr" value="${item.drawFeeRatio}" />
-							</td>
-							<td width="100px">
-								<input type="text" ${inputflg } class="input-box" placeholder="单位：元" name="addDrawFeeAmtArr" value="${item.addDrawFeeAmt}" />
-							</td>
-							<td class="special">
+							<%-- <td class="special">
 								<input type="text" ${inputflg } class="input-box" placeholder="空或者0，则不限额" name="minPerAmtArr" value="${item.minPerAmt}" />
 							</td>
 							<td class="special">
@@ -111,7 +58,7 @@ background-color:#c35c7a;
 							</td class="special">
 							<td class="special">
 								<input type="text" ${inputflg } class="input-box" placeholder="空或者0，则不限额" name="maxTotalAmtArr" value="${item.maxTotalAmt}" />
-							</td>
+							</td> --%>
 							<%-- <td>
 								<select name="status" required ${inputflg }  class="input-box">
 									<option value="PENDING" <c:if test="${item.status eq 'PENDING'}">selected</c:if>>未激活</option>
@@ -139,11 +86,11 @@ background-color:#c35c7a;
 				<tr>
 					<td class="liner-box-left">所属代理商:</td>
 					<td class="liner-box-right">
-						<select name="agentId" class="input-box">
+						<select name="agentNo" class="input-box">
 							<option value="">--请选择--</option>
 							
 							<c:forEach items="${agents}" var="agent">
-								<option value="${agent.agentNo}" <c:if test="${item.agentId eq agent.agentNo}">selected</c:if> >${agent.name} - ${agent.agentNo}</option>
+								<option value="${agent.agentNo}" <c:if test="${item.agentNo eq agent.agentNo}">selected</c:if> >${agent.name} - ${agent.agentNo}</option>
 							</c:forEach>
 						</select>
 					</td>
@@ -151,7 +98,7 @@ background-color:#c35c7a;
 				<tr>
 					<td class="liner-box-left required">类别:</td>
 					<td class="liner-box-right">
-						<utils:merccate mode="sel" name="mercCategory" needDefaultValue="请选择" cssName="input-box" value="${item.mercCategory}" extraAttr="required='required' " />
+						<utils:enum mode="sel" name="mercCategory" needDefaultValue="请选择" cssName="input-box " value="${item.mercCategory}"  extraAttr="required='required' " key="EnumMercCategory" />
 					</td>
 				</tr>
 				<tr>
@@ -161,29 +108,19 @@ background-color:#c35c7a;
 					</td>
 				</tr>
 				<tr>
-					<td class="liner-box-left required">联系电话:</td>
+					<td class="liner-box-left required">T0授信比:</td>
 					<td class="liner-box-right">
-						<input type="text" class="input-box" placeholder="电话" name="phone" value="${item.phone}" />
+						<input type="text" class="input-box" placeholder="授信比例" name="creditRatio" value="${item.creditRatio}" />%
 					</td>
 				</tr>
 				<tr>
-					<td class="liner-box-left required">结算卡号:</td>
+					<td class="liner-box-left ">结算日期:</td>
 					<td class="liner-box-right">
-						<input type="text" class="input-box" placeholder="结算卡号" name="accCardNo" value="${item.accCardNo}" />
+						<input type="hidden" name="settleDate" value="${item.settleDate}" />
+						<input type="text" class="input-box" placeholder="结算日期" name="settleDate" disabled value="${item.settleDate}" />
 					</td>
 				</tr>
-				<tr>
-					<td class="liner-box-left required">结算户名:</td>
-					<td class="liner-box-right">
-						<input type="text" class="input-box" placeholder="结算户名" name="accCardHolder" value="${item.accCardHolder}" />
-					</td>
-				</tr>
-				<tr>
-					<td class="liner-box-left required">结算卡银行:</td>
-					<td class="liner-box-right">
-						<input type="text" class="input-box" placeholder="结算卡银行" name="accBankName" value="${item.accBankName}" />
-					</td>
-				</tr>
+			
 			</table>
 		</div>
 		<div class="ms-col-5 ms-border">
@@ -224,12 +161,6 @@ background-color:#c35c7a;
 					</td>
 				</tr>
 				<tr>
-					<td class="liner-box-left required">T0授信比:</td>
-					<td class="liner-box-right">
-						<input type="text" class="input-box" placeholder="授信比例" name="creditRatio" value="${item.creditRatio}" />%
-					</td>
-				</tr>
-				<tr>
 					<td class="liner-box-left required">加密Key:</td>
 					<td class="liner-box-right">
 						<input type="text" class="input-box" style="width: 180px;" placeholder="加密Key" name="encKey" value="${item.encKey}" />
@@ -240,24 +171,6 @@ background-color:#c35c7a;
 					<td class="liner-box-left required">签名Key:</td>
 					<td class="liner-box-right">
 						<input type="text" class="input-box" style="width: 180px;" placeholder="签名Key" name="signKey" value="${item.signKey}" />
-					</td>
-				</tr>
-				<%-- <tr>
-					<td class="liner-box-left required">代付Key:</td>
-					<td class="liner-box-right">
-						<input type="text" class="input-box" style="width: 180px;" placeholder="支付Key" name="payKey" value="${item.payKey}" />
-					</td>
-				</tr> --%>
-				<tr>
-					<td class="liner-box-left">&nbsp;</td>
-					<td class="liner-box-right">
-						&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td class="liner-box-left">&nbsp;</td>
-					<td class="liner-box-right">
-						&nbsp;
 					</td>
 				</tr>
 			</table>
@@ -287,7 +200,7 @@ background-color:#c35c7a;
 	        'selectedText': 'cat'
 	    });
 		
-		$('input[name=selProductTypeArr]').click(function() {
+		$('input[name=selCoinArr]').click(function() {
 			var inputs = $(this).closest('tr').find('.input-box');
 			if($(this).is(":checked")) {
 				inputs.removeAttr('readonly').attr("required", "required");

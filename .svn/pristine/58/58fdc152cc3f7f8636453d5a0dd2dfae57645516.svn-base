@@ -76,22 +76,21 @@ table.list-wapper td.num {
 	<c:forEach var="item" items="${res.items}" varStatus="status">
 		<tr class="list-item">
 			<td>
-				<utils:enum mode="lbl"  value="${item.accountType}" key="EnumDownUserStatus" />
 				<c:if test="${item.accountType eq 'Merchant'}">机构</c:if>
 				<c:if test="${item.accountType eq 'Agent'}">代理商</c:if>
 			</td>
 			<td style="text-align: left;"><c:out value="${item.mchName}" />(<c:out value="${item.mchNo}" />)</td>
 			<td><c:out value="${item.creditRatio}"/>%</td>
-		    <td><utils:dateFormat value="${item.changeDate}" /></td>
-			<td class="num">${item.settleInAmt }</td>
-			<td class="num">${item.settleOutAmt }</td>
-			<td class="num">${item.settleInAmt - item.settleOutAmt }</td>
-			<td class="num">${item.curInAmt }</td>
-			<td class="num">${item.curInAmt * item.creditRatio / 100 }</td>
-			<td class="num">${item.curOutAmt }</td>
-			<td class="num">${item.frozenAmt }</td>
+		    <td><c:out value="${item.createDate}" /></td>
+			<td class="num"><fmt:formatNumber value="${item.settleInAmt / 100 }" pattern="#,##0.00#"/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber value="${item.settleOutAmt / 100 }" pattern="#,##0.00#"/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber value="${(item.settleInAmt - item.settleOutAmt) / 100}" pattern="#,##0.00#"/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber value="${item.curInAmt / 100 }" pattern="#,##0.00#"/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber value="${item.curInAmt * item.creditRatio / 10000}" pattern="#,##0.00#"/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber value="${item.curOutAmt / 100 }" pattern="#,##0.00#"/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber value="${item.frozenAmt / 100 }" pattern="#,##0.00#"/>&nbsp;</td>
 			<td><a href="<c:url value="/admin/downMerchantFundAccount/frozen?id=${item.id}" />" class="choose-link operate-detail">变动冻结</a></td>
-			 
+			
 			<c:set var="rowNum" value="${rowNum + 1 }" />
 			<c:set var="settleInAmt" value="${item.settleInAmt + settleInAmt }" />
 			<c:set var="settleOutAmt" value="${item.settleOutAmt + settleOutAmt }" />
@@ -107,8 +106,8 @@ table.list-wapper td.num {
 		<tr class="list-item" style="font-weight: bold;">
 			<td></td>
 			<td align='right'>合计：</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
+			<td><c:out value="${item.creditRatio}" />&nbsp;</td>
+			<td><utils:dateFormat value="${item.settleDate}" /></td>
 			<td class="num"><fmt:formatNumber value="${settleInAmt / 100 }" pattern="#,##0.00#"/>&nbsp;</td>
 			<td class="num"><fmt:formatNumber value="${settleOutAmt / 100 }" pattern="#,##0.00#"/>&nbsp;</td>
 			<td class="num"><fmt:formatNumber value="${(settleInAmt - item.settleOutAmt) / 100}" pattern="#,##0.00#"/>&nbsp;</td>

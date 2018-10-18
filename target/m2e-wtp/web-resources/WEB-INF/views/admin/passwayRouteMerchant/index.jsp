@@ -4,7 +4,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="utils" tagdir="/WEB-INF/tags/utils"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
 <style>
 span.overhide {
     overflow: hidden; 
@@ -19,15 +18,12 @@ span.overhide {
 	<label for="keywords">过滤条件：</label>
 	<input type="text" class="input-box search-input-box" placeholder="关键字" name="keywords" value="${search.keywords}"></input>
 	
-	<label for="channel">通道：</label>
-	<utils:combo mode="sel3" name="channel" needDefaultValue="请选择" cssName="input-box search-input-box" value="${search.channel}"></utils:combo>
+	<label for="channel">公链平台：</label>
+	<utils:enum mode="sel" name="channel" needDefaultValue="全部" cssName="input-box search-input-box" value="${search.channel}" key="EnumDownNoCardChannel" />
 	
-	<label for="channel">结算模式：</label>
-	<utils:enum key="EnumSettleType" name="settleType" needDefaultValue="请选择"  cssName="input-box search-input-box" value="${search.settleType}"></utils:enum>
-	
-	<label for="channel">状态：</label>
-	<utils:enum mode="sel" name="status" needDefaultValue="请选择" cssName="input-box search-input-box" value="${search.status}" key="EnumDownUserStatus" />
-	
+	<label for="status">状态：</label>
+	<utils:enum mode="sel" name="status" needDefaultValue="全部" cssName="input-box search-input-box" value="${search.status}" key="EnumDownUserStatus" />
+
 	<input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input>
 	<div class="space"></div>
 	<input type="submit" value="搜索" class="btn"></input>
@@ -35,34 +31,31 @@ span.overhide {
 </form>
 <table class="list-wapper">
 	<tr class="list-header">
-		<td>通道</td>
-		<td>通道商编</td>
-		<td>通道商户</td>
+		<td>公链平台</td>
+		<td>货币名称</td>
 		
-		<td>上日结算</td>
-		<td>账户余额</td>
-		<td>授信额度</td>
-		<td>已代付额</td>
-		<td>冻结金额</td>
+		<td>货币精度</td>
+		<td>成交量限制</td>
+		<td>日累计成交</td>
 		
-		<td>同步时间</td>
+		<td>开放时间</td>
+		
+		<!-- <td>创建时间</td> -->
 		<td>状态</td>
 	
 		<td>操作</td>
 	</tr>
+	
 	<c:forEach var="item" items="${res.items}" varStatus="status">
 		<tr class="list-item">
 			<td><c:out value="${item.channel}" /></td>
-			<td><c:out value="${item.channelAccNo}" /></td>
-			<td><c:out value="${item.channelAccName}" /></td>
+			<td><c:out value="${item.coinName}" />(<c:out value="${item.coin}" />)</td>
 			
-			<td><fmt:formatNumber value="${item.settleAmt / 100.0}" pattern="#,##0.00#"/></td>
-			<td><fmt:formatNumber value="${item.balanceAmt / 100.0}" pattern="#,##0.00#"/></td>
-			<td><fmt:formatNumber value="${item.creditAmt / 100.0}" pattern="#,##0.00#"/></td>
-			<td><fmt:formatNumber value="${item.curOutAmt / 100.0}" pattern="#,##0.00#"/></td>
-			<td><fmt:formatNumber value="${item.frozenAmt / 100.0}" pattern="#,##0.00#"/></td>
+			<td><c:out value="${item.priceScale}" /></td>
+			<td><c:out value="${item.minPerAmt}" /> ~ <c:out value="${item.maxPerAmt}" /></td>
+			<td><c:out value="${item.maxTotAmt}" /></td>
 			
-			<td><c:out value="${item.amtChgDate}" /></td>
+			<td><c:out value="${item.startTime}" /> - <c:out value="${item.endTime}" /></td>
 			<td><utils:enum mode="lbl" value="${item.status}" key="EnumDownUserStatus" /></td>
 			<td>
 				<a href="<c:url value="/admin/passwayRouteMerchant/add?id=${item.id}" />" class="choose-link operate-detail">编辑</a>
@@ -71,7 +64,7 @@ span.overhide {
 		</tr>
 	</c:forEach>
 	<tr class="list-footer">
-		<td colspan="11">
+		<td colspan="8">
 			<utils:pager></utils:pager>
 		</td>
 	</tr>

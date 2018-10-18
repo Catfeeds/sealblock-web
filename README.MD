@@ -1,12 +1,12 @@
 1. 自定义MAVEN依赖库，手动加入本地仓库
-  mvn install:install-file -Dfile=jcaptcha-1.0-all.jar -DgroupId=local -DartifactId=jcaptcha -Dversion=1.0-all -Dpackaging=jar
-  mvn install:install-file -Dfile=thumbnailator-0.4.5-all.jar -DgroupId=local -DartifactId=thumbnailator -Dversion=0.4.5-all -Dpackaging=jar
-  mvn install:install-file -Dfile=json-1.0.0.jar -DgroupId=local -DartifactId=json -Dversion=1.0.0 -Dpackaging=jar
-  mvn install:install-file -Dfile=patchca-0.5.0.jar -DgroupId=local -DartifactId=patchca -Dversion=0.5.0 -Dpackaging=jar
-  mvn install:install-file -Dfile=sms-http.jar -DgroupId=local -DartifactId=sms-http -Dversion=1.0.0 -Dpackaging=jar
+     mvn install:install-file -Dfile=jcaptcha-1.0-all.jar -DgroupId=local -DartifactId=jcaptcha -Dversion=1.0-all -Dpackaging=jar
+       mvn install:install-file -Dfile=thumbnailator-0.4.5-all.jar -DgroupId=local -DartifactId=thumbnailator -Dversion=0.4.5-all -Dpackaging=jar
+       mvn install:install-file -Dfile=json-1.0.0.jar -DgroupId=local -DartifactId=json -Dversion=1.0.0 -Dpackaging=jar
+       mvn install:install-file -Dfile=patchca-0.5.0.jar -DgroupId=local -DartifactId=patchca -Dversion=0.5.0 -Dpackaging=jar
+       mvn install:install-file -Dfile=sms-http.jar -DgroupId=local -DartifactId=sms-http -Dversion=1.0.0 -Dpackaging=jar
 2. 创建数据库&分配对应权限 
-  CREATE DATABASE `woo_sealblock` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-  GRANT ALL PRIVILEGES ON woo_sealblock.* TO 'woo_sealblock'@'localhost' IDENTIFIED BY '2018!@sealblock';
+     CREATE DATABASE `woo_sealblock` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+       GRANT ALL PRIVILEGES ON woo_sealblock.* TO 'woo_sealblock'@'localhost' IDENTIFIED BY '2018!@sealblock';
 3. 生成POJO代码
     mvn woo-jpa:generate
     Before you use this command, to run 'mvn clean install' on wooplugin project firstly.
@@ -17,12 +17,14 @@
     ​	本地化配置信息，system.proterties
     ​	Spring配置信息
 5. 数据库备份与还原命令
-  mysqldump --default-character-set=utf8 -uexchange -p123456 woo_sealblock > woo_sealblock.sql
-  mysql --default-character-set=utf8 -uexchange -p123456 woo_sealblock < woo_sealblock.sql
+     mysqldump --default-character-set=utf8 -uexchange -p123456 woo_sealblock > woo_sealblock.sql
+       mysql --default-character-set=utf8 -uexchange -p123456 woo_sealblock < woo_sealblock.sql
 6. 服务器发布与环境变量配置文件
-  发布脚本，/deploy.sh
-  配置文件，/memo/my_profile
+     发布脚本，/deploy.sh
+       配置文件，/memo/my_profile
 
 
 
 2018年10月17号增加接口测试地址:http://localhost:8080/sealblock-web/api/test/index
+
+完成三个页面调试,三个页面都可以正常访问,明天继续更新,2018年10月17号20:19

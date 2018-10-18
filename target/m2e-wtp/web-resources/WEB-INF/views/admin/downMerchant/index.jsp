@@ -20,8 +20,11 @@ display:inline-block;width:70px;font-weight:bold;
 	<label for="keywords">过滤条件：</label>
 	<input type="text" class="input-box search-input-box" placeholder="关键字" name="keywords" value="${search.keywords}"></input>
 	
-	<label for="mercCategory">商户类别：</label>
-	<utils:merccate id="mercCategory" name="mercCategory" cssName="input-box search-input-box" value="${search.mercCategory}"></utils:merccate>
+	<label for="mercCategory">类别：</label>
+	<utils:enum mode="sel" name="mercCategory" needDefaultValue="全部" cssName="input-box search-input-box" value="${search.mercCategory}" key="EnumMercCategory" />
+	
+	<label for="mercCategory">状态：</label>
+	<utils:enum mode="sel" name="status" needDefaultValue="全部" cssName="input-box search-input-box" value="${search.status}" key="EnumDownUserStatus" />
 	
 	<input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input>
 	<div class="space"></div>
@@ -33,12 +36,9 @@ display:inline-block;width:70px;font-weight:bold;
 </form>
 <table class="list-wapper">
 	<tr class="list-header">
+		<td>机构</td>
 		<td>类别</td>
-		<td>机构号</td>
-		<td>机构名称</td>
-		<td>结算账户</td>
-		<!-- <td>结算卡卡号</td> -->
-		<td>开通产品</td>
+		<td>开通货币</td>
 		<td>信任IP</td>
 		<td>创建时间</td>
 		<td>状态</td>
@@ -46,50 +46,12 @@ display:inline-block;width:70px;font-weight:bold;
 	</tr>
 	<c:forEach var="item" items="${res.items}" varStatus="status">
 		<tr class="list-item">
-			<td>
-				<utils:merccate mode="lbl" value="${item.mercCategory}" />
-			</td>
-			<td>
-				<c:out value="${item.mchNo}" />
-			</td>
-			<td>
-				<c:out value="${item.name}" />
-			</td>
-			<td>
-				<c:out value="${item.accCardHolder}" />
-			</td>
-			<%-- <td>
-				<c:out value="${item.accCardNo}" />
-			</td> --%>
-			<%-- <td>
-				<c:out value="${item.feeRatio}" />‰ /<c:out value="${item.addFeeAmt}" />元
-			</td>
-			<td>
-				<c:out value="${item.drawFeeRatio}" />‰ /<c:out value="${item.addDrawFeeAmt}" />元
-			</td> 
-			<td>
-				<c:if test="${not empty item.supportPayType }">
-					<c:if test="${fn:contains(item.supportPayType,'01')==true}">网银、</c:if>
-					<c:if test="${fn:contains(item.supportPayType,'02')==true}">银联在线、</c:if>
-				</c:if>
-				<c:if test="${empty item.supportPayType }">
-					<c:choose>
-						<c:when test="${item.payType eq '01' }">网银</c:when>
-						<c:when test="${item.payType eq '02' }">银联在线</c:when>
-						<c:otherwise>${item.payType }</c:otherwise>
-					</c:choose>
-				</c:if>
-			</td>--%>
-			<td>
-				${item.productTypeSummary }
-			</td>
+			<td><c:out value="${item.name}" />(<c:out value="${item.mchNo}" />)</td>
+			<td><utils:enum mode="lbl" value="${item.mercCategory}" key="EnumMercCategory" /></td> 
+			<td>${item.fundSummary }</td>
 			<td><c:out value="${item.limitIps }" /></td>
-			<td>
-				<c:out value="${item.createDate}" />
-			</td>
-			<td>
-				<c:out value="${item.status}" />
-			</td>
+			<td><c:out value="${item.createDate}" /></td>
+			<td><utils:enum mode="lbl" value="${item.status}" key="EnumDownUserStatus" /></td>
 			<td>
 				<a href="<c:url value="/admin/downMerchant/add?id=${item.id}" />" class="choose-link operate-detail">编辑</a>
 				<a href="<c:url value="/admin/downMerchant/delete/${item.id}" />" class="choose-link operate-delete" >删除</a>

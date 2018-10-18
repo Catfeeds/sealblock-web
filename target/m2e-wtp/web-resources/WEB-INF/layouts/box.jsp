@@ -72,7 +72,11 @@ html, body {
 	.tl-cell-hide {
 		display: none;
 	}
+	input.input-box[readonly], select.input-box[readonly] {
+		background-color: rgb(235, 235, 228);
+	}
 </style>
+
 <script type="text/javascript" src="<c:url value='/resources/js/bootstrap/bootstrap-select.js' />"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/bootstrap/bootstrap.min.js' />"></script>
 <script>

@@ -1,9 +1,9 @@
 var encData = {
 	synchronizeData : {
 		payload: null,
-		mchNo: "A0001",
+		mchNo: "T0001",
 	},
-	versionNo: 1,
+//	versionNo: 1,
 	encKey : "1234567812345678",
 	signKey: "1234"
 }; 
@@ -13,7 +13,6 @@ function bindEncForm() {
 		encData.synchronizeData.mchNo = $('#mchNo').val();
 		encData.encKey = $('#encKey').val();
 		encData.signKey = $('#signKey').val();
-		encData.versionNo = $('#versionNo').val();
 		return false;
 	});
 	$('.enc-service-form').each(function() {
@@ -31,7 +30,7 @@ function bindEncForm() {
 				var d = encData.synchronizeData;
 				d.payload = formData;
 				d.payload.mchNo = d.mchNo;
-				d.payload.versionNo = encData.versionNo;
+//				d.payload.versionNo = encData.versionNo;
 				var encKey = encData.encKey;
 				var signKey = encData.signKey;
 				$(".request-url").html("URI: " + url.substring(url.indexOf('service') + 7));

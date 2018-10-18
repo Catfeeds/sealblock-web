@@ -39,13 +39,17 @@
 	<c:if test="${not empty value }">
 		<c:set var="_value" value="${value }" scope="request" />
 	<%
-		java.util.Map<String, String> code2Names = EnumHelper.getMapByKey((String)request.getAttribute("_key"));
 		String names = "";
-		String[] values = ((String)request.getAttribute("_value")).split(",");
-		for(String value : values) {
-			names += "," + (code2Names.get(value) == null ? value : code2Names.get(value));
+		java.util.Map<String, String> code2Names = EnumHelper.getMapByKey((String)request.getAttribute("_key"));
+		if(code2Names != null) {
+			String[] values = ((String)request.getAttribute("_value")).split(",");
+			for(String value : values) {
+				names += "," + (code2Names.get(value) == null ? value : code2Names.get(value));
+			}
+			names = names.substring(1);
 		}
-		request.setAttribute("_names", names.substring(1));
+		
+		request.setAttribute("_names", names); 
 	%>
 		<c:out value="${_names }" />
 	</c:if>

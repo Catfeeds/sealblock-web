@@ -39,27 +39,21 @@ String resourceUrl = com.woodare.framework.utils.SysProperties.getInstance().get
 			</tr>
 		</c:if>
 		<tr>
-			<td class="liner-box-left required">通道:</td>
+			<td class="liner-box-left required">公链:</td>
 			<td class="liner-box-right">
-				<utils:combo mode="sel3" name="channel" extraAttr="required='required'" needDefaultValue="请选择" cssName="input-box" value="${item.channel}"></utils:combo>
+				<utils:enum mode="sel" name="channel" extraAttr="required='required'" needDefaultValue="请选择" cssName="input-box " value="${item.channel}" key="EnumDownNoCardChannel" />
 			</td>
 		</tr>
 		<tr>
-			<td class="liner-box-left required">结算模式:</td>
+			<td class="liner-box-left required">币简称(全局唯一):</td>
 			<td class="liner-box-right">
-				<utils:enum key="EnumSettleType" extraAttr="required='required' " needDefaultValue="请选择" name="settleType" cssName="input-box" value="${item.settleType}"></utils:enum>
+				<input type="text" class="input-box" required="required" placeholder="币简称" name="coin" value="${item.coin}" />
 			</td>
 		</tr>
 		<tr>
-			<td class="liner-box-left required">账户名称:</td>
+			<td class="liner-box-left required">币名称:</td>
 			<td class="liner-box-right">
-				<input type="text" class="input-box" required="required" placeholder="账户名称" name="channelAccName" value="${item.channelAccName}" />
-			</td>
-		</tr>
-		<tr>
-			<td class="liner-box-left required">账户编号:</td>
-			<td class="liner-box-right">
-				<input type="text" class="input-box" required="required" placeholder="账户编号" name="channelAccNo" value="${item.channelAccNo}" />
+				<input type="text" class="input-box" required="required" placeholder="账户编号" name="coinName" value="${item.coinName}" />
 			</td>
 		</tr>
 		<tr>
@@ -115,54 +109,51 @@ String resourceUrl = com.woodare.framework.utils.SysProperties.getInstance().get
 				</td>
 			</tr>
 		</c:if>
-		
-		
-		<%-- <c:if test="${not empty item.createDate }">
-			<tr>
-				<td class="liner-box-left ">原加密Key(效验值):</td>
-				<td class="liner-box-right">
-					<input type="text" class="input-box" placeholder="无历史数据" name="encKeyMd5" value="${item.encKeyMd5}" />
-				</td>
-			</tr>
-		</c:if>
 		<tr>
-			<td class="liner-box-left ">加密Key（明文）:</td>
+			<td class="liner-box-left ">服务时间:</td>
 			<td class="liner-box-right">
-				<input type="text" class="input-box" placeholder="留空表示不修改" name="encKeyPlain"  />
+				<input type="text" class="input-box search-input-box datetime-picker " placeholder="开始时间" name="startTime" value="<utils:dateFormat value="${item.startTime}" />"></input>
+				<label >~</label>
+				<input type="text" class="input-box search-input-box datetime-picker " placeholder="结束时间" name="endTime" value="<utils:dateFormat value="${item.endTime}" />"></input>
+				<script>
+					$(function() {
+						$('.datetime-picker').timepicker({ 'timeFormat': 'H:i:s' });
+					});
+				</script>
+				<p style="color: red;">默认为00:00:00表示不启用时间条件</p>
 			</td>
 		</tr>
-		<c:if test="${not empty item.createDate }">
-			<tr>
-				<td class="liner-box-left ">原支付Key(效验值):</td>
-				<td class="liner-box-right">
-					<input type="text" class="input-box" placeholder="无历史数据" name="payKeyMd5" value="${item.payKeyMd5}" />
-				</td>
-			</tr>
-		</c:if>
 		<tr>
-			<td class="liner-box-left ">支付Key（明文）:</td>
+			<td class="liner-box-left required">价格精度（位数）：</td>
 			<td class="liner-box-right">
-				<input type="text" class="input-box" placeholder="留空表示不修改" name="payKeyPlain"  />
+				<input class="input-box" style="width: 60px;" maxlength="3" required type="text" placeholder="" name="priceScale" value="${item.priceScale}">
+				<p style="color: red;">精确到小数点后第几位</p>
 			</td>
-		</tr> --%>
+		</tr>
 		<tr>
-			<td class="liner-box-left ">费率信息:</td>
+			<td class="liner-box-left required">单笔最低额：</td>
 			<td class="liner-box-right">
-				<textarea class="input-box" style="height: 50px;" name="feeText">${item.feeText }</textarea>
+				<input class="input-box" style="width: 120px;" maxlength="10" required type="text" placeholder="" name="minPerAmt" value="${item.minPerAmt}">
+			</td>
+		</tr>
+		<tr>
+			<td class="liner-box-left required">单笔最高额：</td>
+			<td class="liner-box-right">
+				<input class="input-box" style="width: 120px;" maxlength="10" required type="text" placeholder="" name="minPerAmt" value="${item.maxPerAmt}">
 			</td>
 		</tr>
 		<tr>
 			<td class="liner-box-left ">额外配置:</td>
 			<td class="liner-box-right">
-				<textarea class="input-box" style="height: 50px;" name="extra">${item.extra }</textarea>
+				<textarea class="input-box" style="height: 80px;" name="extra">${item.extra }</textarea>
 			</td>
 		</tr>
-		<tr>
+		<%-- <tr>
 			<td class="liner-box-left ">备注:</td>
 			<td class="liner-box-right">
 				<input type="text" class="input-box" placeholder="备注  " name="remark" value="${item.remark}" />
 			</td>
-		</tr>
+		</tr> --%>
 		<tr>
 			<td colspan="2" class="liner-box-one-line">
 				<input type="submit" value="提交" class="btn" id="confirmBtn" />

@@ -14,6 +14,8 @@ package com.woodare.template.web.viewdata.downmerchantfundaccount;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
+
 import com.woodare.template.jpa.persistence.data.downmerchantfundaccount.DownMerchantFundAccountData;
 
 /**
@@ -36,22 +38,8 @@ public class DownMerchantFundAccountViewData extends DownMerchantFundAccountData
 
 	private BigDecimal curFrozenAmt;
 
-	// 附加描述信息
-	private String coinDescription;
-
-	/**
-	 * @return the coinDescription
-	 */
-	public String getCoinDescription() {
-		return coinDescription;
-	}
-
-	/**
-	 * @param coinDescription
-	 *            the coinDescription to set
-	 */
-	public void setCoinDescription(String coinDescription) {
-		this.coinDescription = coinDescription;
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	/**
