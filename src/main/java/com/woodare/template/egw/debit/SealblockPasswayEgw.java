@@ -1,0 +1,129 @@
+package com.woodare.template.egw.debit;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.woodare.framework.exception.MessageWooException;
+import com.woodare.sealblock.IBlockApi;
+import com.woodare.sealblock.MockBlockApi;
+import com.woodare.sealblock.SealblockApi;
+import com.woodare.sealblock.data.SealblockAccountData;
+import com.woodare.sealblock.data.TransactionData;
+import com.woodare.sealblock.data.WalletData;
+import com.woodare.template.egw.base.AbstracPasswayEgw;
+import com.woodare.template.egw.base.IPasswayEgw;
+import com.woodare.template.helper.cache.PasswayRouteMerchants;
+import com.woodare.template.jpa.model.DownNoCardInvoice;
+import com.woodare.template.jpa.model.SubMerchant;
+import com.woodare.template.jpa.model.data.EnumOrderStatus;
+import com.woodare.template.jpa.persistence.data.downnocardinvoice.DownNoCardInvoiceData;
+import com.woodare.template.jpa.persistence.data.submerchant.SubMerchantData;
+import com.woodare.template.web.viewdata.passwayroutemerchant.PasswayRouteMerchantViewData;
+import com.woodare.template.web.viewdata.passwayroutemerchant.SealblockCoinData;
+
+/**
+ * Sealblock渠道业务中转服务
+ * 
+ * @author Luke
+ */
+@Service("sealblockPasswayEgw")
+public class SealblockPasswayEgw extends AbstracPasswayEgw implements IPasswayEgw {
+	private IBlockApi api = null;
+
+	public SealblockPasswayEgw() {
+		if (prop.getBooleanProperty("egw.production", false)) {
+			api = new SealblockApi();
+		}
+		else {
+			api = new MockBlockApi();
+		}
+	}
+
+	public List<WalletData> listWallet(String coinAdress) throws MessageWooException {
+		return api.listWallet(coinAdress);
+	}
+
+	public SubMerchantData generateAddress(String secret) throws MessageWooException {
+		SealblockAccountData blockAccount = api.generateAccount(secret);
+
+		SubMerchantData user = new SubMerchantData();
+		user.setPrikey(blockAccount.getPrikey());
+		user.setAddress(blockAccount.getBlockAddr());
+
+		return user;
+	}
+
+	public BigDecimal getBalance(String coin, String coinAddress) throws MessageWooException {
+		BigDecimal balanceAmt = new BigDecimal("0");
+
+		String weiBalance = api.getBalance(coin, coinAddress);
+		if (weiBalance != null && !"0".equals(weiBalance)) {
+			PasswayRouteMerchantViewData coinData = PasswayRouteMerchants.getByCoin(coin);
+			SealblockCoinData sealblock = coinData.getSealblock();
+
+			balanceAmt = new BigDecimal(weiBalance).divide(BigDecimal.TEN.pow(Integer.valueOf(sealblock.getDecimals()))).setScale(coinData.getPriceScale(), BigDecimal.ROUND_DOWN);
+		}
+
+		return balanceAmt;
+	}
+
+	public DownNoCardInvoiceData sendTransaction(DownNoCardInvoice invoice, SubMerchant userData) throws MessageWooException {
+		TransactionData respData = api.sendTransaction(invoice, userData);
+
+		DownNoCardInvoiceData newInvData = new DownNoCardInvoiceData();
+		newInvData.setUpTransNo(respData.getTransaction_id());
+		return newInvData;
+	}
+
+	/**
+	 * 生成用户钱包信息
+	 * 
+	 * @param user
+	 * @param coinType
+	 * @return
+	 * @throws MessageWooException
+	 */
+	public String createCoinWallet(String blockAddress, String coinType) throws MessageWooException {
+		String coinAddress = api.createWallet(coinType, blockAddress);
+		return coinAddress;
+	}
+
+	@Override
+	public DownNoCardInvoiceData orderQuery(DownNoCardInvoice invoice) throws MessageWooException {
+		TransactionData transData = api.getTransaction(invoice);
+
+		trimPrefix(transData);
+
+		// 异常Case处理
+		DownNoCardInvoiceData newInvData = new DownNoCardInvoiceData();
+		newInvData.setUpTransNo(transData.getTransaction_id());
+		if ("confirmed".equals(transData.getStatus())) {
+			newInvData.setFundStatus(EnumOrderStatus.SUCCESS);
+		}
+		return newInvData;
+	}
+
+	@Override
+	public List<TransactionData> getTransactionHistory(String coinType, String coinWalletAddress) throws MessageWooException {
+		List<TransactionData> items = api.getTransactionHistory(coinType, coinWalletAddress);
+		if (items != null) {
+			for (TransactionData transData : items) {
+				trimPrefix(transData);
+			}
+		}
+		return items;
+	}
+
+	private void trimPrefix(TransactionData transData) {
+		if (transData != null) {
+			if (transData.getFromAddr().startsWith("0x")) {
+				transData.setFromAddr(transData.getFromAddr().substring(2));
+			}
+			if (transData.getToAddr().startsWith("0x")) {
+				transData.setToAddr(transData.getToAddr().substring(2));
+			}
+		}
+	}
+}

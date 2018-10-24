@@ -1,0 +1,223 @@
+package com.woodare.sealblock;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Keys;
+import org.web3j.crypto.Wallet;
+import org.web3j.crypto.WalletFile;
+
+import com.alibaba.fastjson.JSONObject;
+import com.woodare.framework.exception.MessageWooException;
+import com.woodare.framework.spring.ApplicationContextHolder;
+import com.woodare.framework.utils.CommonUtils;
+import com.woodare.sealblock.data.SealblockAccountData;
+import com.woodare.sealblock.data.TransactionData;
+import com.woodare.sealblock.data.WalletData;
+import com.woodare.sealblock.util.SealAesUtils;
+import com.woodare.sealblock.util.SealMD5Tool;
+import com.woodare.sealblock.util.SealblockException;
+import com.woodare.template.busi.coin.ICoinService;
+import com.woodare.template.helper.cache.PasswayRouteMerchants;
+import com.woodare.template.web.viewdata.passwayroutemerchant.PasswayRouteMerchantViewData;
+import com.woodare.template.web.viewdata.passwayroutemerchant.SealblockCoinData;
+
+/**
+ * Mock对接服务工具类
+ * 
+ * @author Luke
+ */
+public class MockBlockApi implements IBlockApi {
+	//
+	static Map<String, BigDecimal> blanceMap = new HashMap<String, BigDecimal>();
+	static Map<String, Map<String, String>> map = new HashMap<String, Map<String, String>>();
+	static Map<String, TransactionData> transMap = new HashMap<String, TransactionData>();
+
+	public String createWallet(final String coin, String blockAddr) throws SealblockException {
+		final String coinAddress = CommonUtils.uuid().toUpperCase();
+
+		if (!map.containsKey(blockAddr)) {
+			map.put(blockAddr, new HashMap<String, String>());
+		}
+		map.get(blockAddr).put(coin, coinAddress);
+
+		blanceMap.put(coinAddress, new BigDecimal("100"));
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(2000l);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+				ICoinService ethereumCoinService = (ICoinService) ApplicationContextHolder.getApplicationContext().getBean("ethereumCoinService");
+
+				BigDecimal amount = new BigDecimal("100");
+
+				PasswayRouteMerchantViewData coinData = PasswayRouteMerchants.getByCoin(coin);
+				SealblockCoinData sealblock = coinData.getSealblock();
+				BigDecimal weiamount = amount.multiply(BigDecimal.TEN.pow(Integer.valueOf(sealblock.getDecimals()))).setScale(0, BigDecimal.ROUND_DOWN);
+
+				TransactionData transaction = new TransactionData();
+				transaction.setAmount(weiamount.toString());
+				transaction.setConfirmation("Sure");
+				transaction.setFromAddr("0000000000000000000");
+				transaction.setToAddr(coinAddress);
+				transaction.setStatus("1");
+				transaction.setTransaction_id(CommonUtils.uuid());
+
+				try {
+					ethereumCoinService.approveTrans(transaction, false);
+				} catch (MessageWooException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}).start();
+		return coinAddress;
+	}
+
+	public List<WalletData> listWallet(String blockAddr) throws SealblockException {
+		List<WalletData> wallets = new ArrayList<>(16);
+		if (map.containsKey(blockAddr)) {
+			for (Map.Entry<String, String> entry : map.get(blockAddr).entrySet()) {
+				WalletData wallet = new WalletData();
+				wallet.setCoinType(entry.getKey());
+				wallet.setAddr(entry.getValue());
+				wallets.add(wallet);
+			}
+		}
+		return wallets;
+	}
+
+	public String sendTransaction(final String coinType, String blockAddr, String prikey, String secret, JSONObject reqData) throws SealblockException {
+		try {
+			Thread.sleep(3000l);
+		} catch (InterruptedException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		// 转出钱包地址
+		final String sender = reqData.getString("sender");
+		// 转入钱包地址
+		final String receiv = reqData.getString("receiv");
+		// 折算后金额
+		final String txnAmount = reqData.getString("weiAmount");
+
+		final TransactionData transactoin = new TransactionData();
+
+		transactoin.setAmount(txnAmount.toString());
+		transactoin.setConfirmation("");
+
+		transactoin.setFromAddr(sender);
+		transactoin.setToAddr(receiv);
+
+		transactoin.setRaw_transaction("Raw" + CommonUtils.uuid());
+		transactoin.setStatus("Ok");
+		transactoin.setTransaction_id(CommonUtils.uuid());
+
+		transMap.put(transactoin.getTransaction_id(), transactoin);
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(20000l);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+				ICoinService ethereumCoinService = (ICoinService) ApplicationContextHolder.getApplicationContext().getBean("ethereumCoinService");
+
+				TransactionData transaction = new TransactionData();
+				transaction.setAmount(txnAmount);
+				transaction.setConfirmation("Sure");
+				transaction.setFromAddr(sender);
+				transaction.setToAddr(receiv);
+				transaction.setStatus("1");
+				transaction.setTransaction_id(CommonUtils.uuid());
+
+				try {
+					ethereumCoinService.approveTrans(transaction, true);
+				} catch (MessageWooException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}).start();
+
+		return transactoin.getTransaction_id();
+	}
+
+	public String getBalance(String coinType, String coinWalletAddress) throws SealblockException {
+		BigDecimal amount = blanceMap.get(coinWalletAddress);
+		if (amount == null) {
+			amount = new BigDecimal("0");
+		}
+		return amount.toString();
+	}
+
+	public TransactionData getTransaction(String coinType, String transactionId) throws SealblockException {
+		if (transMap.containsKey(transactionId)) {
+			return transMap.get(transactionId);
+		}
+		return null;
+	}
+
+	public SealblockAccountData generateAccount(String secret) throws SealblockException {
+		try {
+			ECKeyPair ecKeyPair = Keys.createEcKeyPair();
+			BigInteger privateKeyInDec = ecKeyPair.getPrivateKey();
+			String sPrivatekeyInHex = privateKeyInDec.toString(16);
+
+			String key = SealMD5Tool.md5(secret);
+			WalletFile aWallet = Wallet.createLight(key, ecKeyPair);
+			String sAddress = aWallet.getAddress();
+
+			SealblockAccountData blockAccount = new SealblockAccountData();
+
+			blockAccount.setBlockAddr("0x" + sAddress);
+			blockAccount.setPrikey(SealAesUtils.encrypt(sPrivatekeyInHex, key));
+
+			return blockAccount;
+		}
+		//
+		catch (Exception e) {
+			throw new SealblockException(e.getMessage(), e);
+		}
+	}
+
+	public String rebuildPrikey(String prikey, String osecret, String nsecret) throws SealblockException {
+		try {
+			String okey = SealMD5Tool.md5(osecret);
+			String nkey = SealMD5Tool.md5(nsecret);
+
+			return SealAesUtils.encrypt(SealAesUtils.decrypt(prikey, okey), nkey);
+		} catch (Exception e) {
+			throw new SealblockException(e.getMessage(), e);
+		}
+	}
+
+	public String rebuildPrikey(String prikey, String secret, String osalt, String nsalt) throws SealblockException {
+		try {
+			String okey = SealMD5Tool.md5(secret + osalt);
+			String nkey = SealMD5Tool.md5(secret + nsalt);
+
+			return SealAesUtils.encrypt(SealAesUtils.decrypt(prikey, okey), nkey);
+		} catch (Exception e) {
+			throw new SealblockException(e.getMessage(), e);
+		}
+	}
+
+	public void shutdown() {
+	}
+}

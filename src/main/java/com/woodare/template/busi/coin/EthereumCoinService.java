@@ -1,0 +1,103 @@
+package com.woodare.template.busi.coin;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSON;
+import com.thirdparty.passway._base.MD5Tool;
+import com.woodare.core.util.SDFFactory;
+import com.woodare.framework.exception.MessageWooException;
+import com.woodare.sealblock.data.TransactionData;
+import com.woodare.template.busi.service.PasswayAssitService;
+import com.woodare.template.helper.cache.PasswayRouteMerchants;
+import com.woodare.template.jpa.model.SubMerchantFundAccount;
+import com.woodare.template.jpa.model.TransactionEthereum;
+import com.woodare.template.jpa.persistence.data.submerchantfundaccount.SubMerchantFundAccountData;
+import com.woodare.template.jpa.persistence.persistence.IDownNoCardInvoiceDAO;
+import com.woodare.template.jpa.persistence.persistence.ISubMerchantFundAccountDAO;
+import com.woodare.template.jpa.persistence.persistence.ITransactionEthereumDAO;
+import com.woodare.template.web.viewdata.passwayroutemerchant.PasswayRouteMerchantViewData;
+import com.woodare.template.web.viewdata.passwayroutemerchant.SealblockCoinData;
+
+/**
+ * 以太坊交易处理服务
+ * 
+ * @author Luke
+ */
+@Service("ethereumCoinService")
+public class EthereumCoinService implements ICoinService {
+	private Log log = LogFactory.getLog(PasswayAssitService.class);
+
+	@Autowired
+	private IDownNoCardInvoiceDAO downNoCardInvoiceDAO;
+	
+	@Autowired
+	private ISubMerchantFundAccountDAO subMerchantFundAccountDAO;
+
+	@Autowired
+	private ITransactionEthereumDAO transactionEthereumDAO;
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public boolean approveTrans(TransactionData transaction, boolean isPayFlag) throws MessageWooException {
+		boolean handled = false;
+
+		String id = MD5Tool.md5(transaction.getTransaction_id());
+
+		TransactionEthereum model = transactionEthereumDAO.findById(id);
+		// 确认为新交易
+		if (model == null) {
+			log.debug("ApproveTrans[]" + JSON.toJSONString(transaction));
+
+			String coinAddress = transaction.getToAddr();
+			if (isPayFlag) {
+				coinAddress = transaction.getFromAddr();
+			}
+			SubMerchantFundAccount fundAccount = subMerchantFundAccountDAO.findCoinAddress(coinAddress);
+
+			model = new TransactionEthereum();
+
+			model.setBlockHash(transaction.getTransaction_id());
+			model.setPayFlag(isPayFlag);
+			model.setAmount(transaction.getAmount());
+			// TODO:
+			model.setBlockHash("1");
+			model.setBlockNumber(1l);
+			model.setFromAddress(transaction.getFromAddr());
+			model.setToAddress(transaction.getToAddr());
+			model.setGas(10l);
+			model.setGasPrice(20l);
+			model.setGasWeight("1");
+			model.setId(id);
+			model.setUserNo(fundAccount.getUserNo());
+			model.setUserName(fundAccount.getUserName());
+			model.setRecordDate(SDFFactory.DATE.format(new Date()));
+			this.transactionEthereumDAO.save(model);
+
+			PasswayRouteMerchantViewData coinData = PasswayRouteMerchants.getByCoin(fundAccount.getCoin());
+			SealblockCoinData sealblock = coinData.getSealblock();
+			BigDecimal amount = new BigDecimal(transaction.getAmount()).divide(BigDecimal.TEN.pow(Integer.valueOf(sealblock.getDecimals()))).setScale(coinData.getPriceScale(), BigDecimal.ROUND_DOWN);
+
+			if (isPayFlag) {
+				// TODO: Try to update invoice order
+				
+			}
+			else {
+				SubMerchantFundAccountData diffFundAccount = new SubMerchantFundAccountData();
+				diffFundAccount.setId(fundAccount.getId());
+				diffFundAccount.setSettleInAmt(amount);
+				subMerchantFundAccountDAO.changeBalance(diffFundAccount);
+			}
+
+			handled = true;
+		}
+		return handled;
+	}
+}

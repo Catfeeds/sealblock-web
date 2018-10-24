@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<definition extends="box" name="/content/downMerchantDeposit/index">
+		<put-attribute name="body" value="/WEB-INF/views/content/downMerchantDeposit/index.jsp" />
+	</definition>
+	<definition extends="box" name="/content/downMerchantDeposit/details">
+		<put-attribute name="body" value="/WEB-INF/views/content/downMerchantDeposit/details.jsp" />
+	</definition>
+	<definition extends="box" name="/content/downMerchantDeposit/add">
+		<put-attribute name="body" value="/WEB-INF/views/content/downMerchantDeposit/add.jsp" />
+	</definition>
+	<definition extends="box" name="/content/downMerchantDeposit/sum">
+		<put-attribute name="body" value="/WEB-INF/views/content/downMerchantDeposit/sum.jsp" />
+	</definition>
+</tiles-definitions>

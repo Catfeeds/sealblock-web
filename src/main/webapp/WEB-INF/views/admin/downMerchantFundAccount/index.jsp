@@ -32,6 +32,7 @@ table.list-wapper td.num {
 		<option value="Merchant" <c:if test="${empty search.accountType or search.accountType eq 'Merchant'}">selected</c:if>>机构</option>
 		<option value="Agent" <c:if test="${search.accountType eq 'Agent'}">selected</c:if>>代理商</option>
 	</select>
+<<<<<<< .mine
 
 	<label for="coinName">公链平台：</label>
 		<select name="coinName" class="input-box search-input-box">
@@ -39,7 +40,15 @@ table.list-wapper td.num {
 		<option value="比特币">比特币</option>
 		<option value="以太币">以太币</option>
 	</select>
+||||||| .r9
+=======
+
+	<label for="coinName">公链平台：</label>
+		<utils:enum mode="sel" name="coinName" needDefaultValue="全部" cssName="input-box search-input-box" value="${search.coinName}" key="EnumDownNoCardChannel" />
+	</select>
+>>>>>>> .r40
 	
+<<<<<<< .mine
 	<label for="changeDate">时间：</label>
 	<label for="startDate" class="custom-d-cate">From：</label>
 	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate" value="${search.startDate}">
@@ -53,6 +62,21 @@ table.list-wapper td.num {
 		}).change();
 	</script>
 	
+||||||| .r9
+=======
+	<label for="startDate" class="custom-d-cate">开始时间：</label>
+	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate" value="${search.startDate}">
+	<label for="endDate" class="custom-d-cate">结束时间：</label>
+	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="结束时间" name="endDate" value="${search.endDate}">
+	
+	<script>
+		$(".date-picker").datepicker($.datepicker.regional[ "zh-CN" ]);
+		$("select[name='dateCate']").change(function(){
+			$(".custom-d-cate")[$(this).val() == 'CUSTOM' ? "show" : "hide"]();
+		}).change();
+	</script>
+	
+>>>>>>> .r40
 	 <label>&nbsp;</label>
 	<input type="checkbox" style="width: 15px;" <c:if test="${search.searchFlag eq true  }">checked="checked"</c:if> class="input-box search-input-box" 
 		id="changedFlag" placeholder="仅显示交易商户" name="searchFlag"></input>

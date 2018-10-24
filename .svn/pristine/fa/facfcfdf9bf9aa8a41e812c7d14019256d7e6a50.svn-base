@@ -1,0 +1,26 @@
+package com.woodare.sealblock.example;
+
+import com.woodare.sealblock.SealblockApi;
+
+/**
+ * @author Luke
+ */
+public class GetBalanceSample {
+	static SealblockApi api = new SealblockApi();
+
+	/**
+	 * @param arg
+	 * @throws Exception
+	 */
+	public static void main(String[] arg) throws Exception {
+
+		String coinType = "ETH";
+		String coinWalletAddress = "460992e83d7137a57483a0b6a49b3b9676d4f543";
+
+		//
+		String balance = api.getBalance(coinType, coinWalletAddress);
+
+		System.out.println("Balance: " + balance);
+		api.shutdown();
+	}
+}

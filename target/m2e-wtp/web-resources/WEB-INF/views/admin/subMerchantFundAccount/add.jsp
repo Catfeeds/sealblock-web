@@ -3,6 +3,10 @@
 <jsp:include page="/WEB-INF/views/iframe-status.jsp"/>
 <form method="post" enctype="multipart/form-data" action="<c:url value="/admin/subMerchantFundAccount/add" />">
 	<input type="hidden" name="id" value="${item.id}">
+	
+	<div class="ms-row">
+		<div class="ms-col-6 ms-border">
+			<div class="ms-header">子用户余额</div>
 	<table class="liner-box">
 		<c:if test="${not empty error}">
 			<tr class="liner-error">
@@ -41,9 +45,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="liner-box-left required">币标识, eth, usdt</td>
+			<td class="liner-box-left required">币标识</td>
 			<td class="liner-box-right">
-				<input class="input-box" type="text" name="currency" value="${item.currency}">
+				<input class="input-box" type="text" name="coin" value="${item.coin}">
 			</td>
 		</tr>
 		<tr>
@@ -88,23 +92,8 @@
 				<input class="input-box" type="text" name="changeDate" value="${item.changeDate}">
 			</td>
 		</tr>
-		<tr>
-			<td class="liner-box-left required">备用字段1</td>
-			<td class="liner-box-right">
-				<input class="input-box" type="text" name="extra1" value="${item.extra1}">
-			</td>
-		</tr>
-		<tr>
-			<td class="liner-box-left required">备用字段 2</td>
-			<td class="liner-box-right">
-				<input class="input-box" type="text" name="extra2" value="${item.extra2}">
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="liner-box-one-line">
-				<input type="submit" value="提交" class="btn" />
-			</td>
-		</tr>
 	</table>
+	</div>
+	</div>
 </form>
 

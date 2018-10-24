@@ -1,0 +1,374 @@
+package com.lee;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
+import com.lee.model.RequestData;
+import com.lee.utils.Aes;
+import com.lee.utils.MD5Util;
+import com.lee.utils.SDFFactory;
+
+public class TransApi {
+	private static String MCH_NO = "T0001";
+	private static String ENC_KEY = "1234567812345678";
+	private static String SIGN_KEY = "1234";
+
+	private static String URL = "http://localhost:8080/sealblock-web";
+
+	/**
+	 * @param args
+	 * @throws Exception
+	 */
+	public static void main(String[] args) throws Exception {
+		
+		//下单支付
+//		makeOrder();
+		 
+		//入网注册
+//		 createUser();
+		 
+		//查询用户账户信息
+//		userBalQuery();
+		
+		//确认交易
+		confirmOrder();
+		
+		//交易状态查询
+//		orderQuery();
+		
+		//机构余额
+//		accBalQuery();
+		
+		//开通货币交易
+//		openUserCoin();
+		
+		//变更用户信息
+//		updateUser();
+		
+		//转账_
+		
+		//转账状态确认_
+		
+	}
+	
+	
+	/**
+	 * 下单支付
+	 * @throws Exception
+	 */
+	public static void makeOrder() throws Exception {
+		Map<String, String> payloadMap = new HashMap<String, String>();
+		// versionNo 接口版本号
+		payloadMap.put("versionNo", "1");
+		// userNo 平台用戶标识
+		payloadMap.put("userNo","F66A005345CC4CBEA2D44415163684DE");
+		//coin 货币类型
+		payloadMap.put("coin","ETH");
+		// price 交易金额, 单位：元
+		payloadMap.put("price", "0.05");
+		// tradeNo 订单号
+		payloadMap.put("tradeNo", "20181019143453146");
+		// subject 标题
+		payloadMap.put("subject", "以太币");
+		// orderDate 订单日期
+		payloadMap.put("orderDate", SDFFactory.DATETIME.format(new Date()));
+		// tradeNo 商户流水号
+		payloadMap.put("tradeNo", SDFFactory.getMemoryUniquedOrderNo());
+		// notifyUrl 异步通知URL
+		payloadMap.put("notifyUrl", "http://www.baidu.com");
+
+		String payload = JSON.toJSONString(payloadMap);
+		System.out.println("业务报文【明文】=>" + payload);
+		
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+
+		String responseString = null;
+		
+		TransUtils.ut(URL + "/ws/trans/nocard/makeOrder",requestString,responseString);
+	}
+	
+	
+	
+	
+	/**
+	 * 入网注册
+	 * @throws Exception
+	 */
+	public static void createUser() throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+
+		//机构用户标识
+		map.put("mchUserNo","ORG181022144849018");
+		//用户姓名
+		map.put("userName", "香蜜2");
+		//用户身份证
+		map.put("userCertId", "321323844414484939");
+		//用户联系电话
+		map.put("userPhone", "16722841872");
+		//以开通货币，用逗号隔开
+		map.put("enabledCoin", "ETH");
+		//商户号
+		map.put("mchNo","T0001");
+
+		String payload = JSON.toJSONString(map);
+		System.out.println("业务报文【明文】=>" + payload);
+
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+
+		String responseString = null;
+		
+		TransUtils.ut(URL + "/ws/trans/subMerchant/createUser",requestString,responseString);
+	}
+	
+	
+	
+	/**
+	 * 查询用户账户信息
+	 * @throws Exception 
+	 */
+	public static void userBalQuery() throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		
+		//机构号
+		map.put("mchNo", "T0001");
+		//平台用户标识
+		map.put("userNo", "F66A005345CC4CBEA2D44415163684DE");
+		
+		String payload = JSON.toJSONString(map);
+		System.out.println("业务报文【明文】=>" + payload);
+		
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+		
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+		
+		String responseString = null;
+		
+		TransUtils.ut(URL + "/ws/trans/nocard/accBalQuery",requestString,responseString);
+		
+	}
+	
+	
+	/**
+	 * 确认交易
+	 * @throws Exception 
+	 */
+	public static void confirmOrder() throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		
+		// 平台订单号
+		map.put("transNo", "D1810231440128471000");
+		// 验证码
+		map.put("smsCode", "111111");
+		//机构号
+		map.put("mchNo", "T0001");
+		
+		String payload = JSON.toJSONString(map);
+		System.out.println("业务报文【明文】=>" + payload);
+		
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+		
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+		
+		String responseString = null;
+		
+		TransUtils.ut(URL + "/ws/trans/nocard/confirmOrder",requestString,responseString);
+	}
+	
+	
+	/**
+	 * 交易状态查询
+	 */
+	public static void orderQuery() throws Exception{
+		Map<String, String> map = new HashMap<String, String>();
+		
+		// 平台订单号
+		map.put("transNo", "D1810231550490191000");
+		//机构号
+		map.put("mchNo", "T0001");
+				
+		String payload = JSON.toJSONString(map);
+		System.out.println("业务报文【明文】=>" + payload);
+		
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+		
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+		
+		String responseString = null;
+		
+		TransUtils.ut(URL + "/ws/trans/nocard/orderQuery",requestString,responseString);
+	}
+	
+	
+	
+	/**
+	 * 机构余额查询
+	 */
+	public static void accBalQuery() throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		
+		//机构号
+		map.put("mchNo", "T0001");
+				
+		String payload = JSON.toJSONString(map);
+		System.out.println("业务报文【明文】=>" + payload);
+		
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+		
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+		
+		String responseString = null;
+		
+		TransUtils.ut(URL + "/ws/trans/nocard/accBalQuery",requestString,responseString);
+	}
+	
+	
+	
+	/**
+	 * 开通货币交易
+	 */
+	public static void openUserCoin() throws Exception{
+		Map<String, String> map = new HashMap<String, String>();
+		
+		//平台用户标识
+		map.put("userNo", "F66A005345CC4CBEA2D44415163684DE");
+		//开通货币,用逗号隔开
+		map.put("enabledCoin", "BTC,ETH");
+		//机构号
+		map.put("mchNo", "T0001");
+				
+		String payload = JSON.toJSONString(map);
+		System.out.println("业务报文【明文】=>" + payload);
+		
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+		
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+		
+		String responseString = null;
+		
+		TransUtils.ut(URL + "/ws/trans/subMerchant/openUserCoin",requestString,responseString);
+	}
+	
+	
+	/**
+	 * 变更用户信息
+	 */
+	public static void updateUser() throws Exception{
+		Map<String, String> map = new HashMap<String, String>();
+		
+		//平台用户标识
+		map.put("userNo", "F66A005345CC4CBEA2D44415163684DE");
+		//用户姓名
+		map.put("userName", "李四");
+		//用户身份证
+		map.put("userCertId", "321323190010105339");
+		//用户手机
+		map.put("userPhone", "18951812474");
+		//机构号
+		map.put("mchNo", "T0001");
+				
+		String payload = JSON.toJSONString(map);
+		System.out.println("业务报文【明文】=>" + payload);
+		
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+		
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+		
+		String responseString = null;
+		
+		TransUtils.ut(URL + "/ws/trans/subMerchant/updateUser",requestString,responseString);
+	}
+}

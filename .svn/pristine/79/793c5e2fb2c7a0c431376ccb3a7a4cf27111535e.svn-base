@@ -1,0 +1,25 @@
+package com.woodare.sealblock.util;
+
+import com.woodare.framework.exception.MessageWooException;
+
+/**
+ * @author Luke
+ */
+public class SealblockException extends MessageWooException {
+	private static final long serialVersionUID = 4541477171273085595L;
+
+	/**
+	 * @param message
+	 */
+	public SealblockException(String message) {
+		super(message);
+	}
+
+	/**
+	 * @param message
+	 * @param throwable
+	 */
+	public SealblockException(String message, Throwable throwable) {
+		super(message, throwable);
+	}
+}

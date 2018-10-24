@@ -1,0 +1,40 @@
+package com.woodare.template.component.schedule;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import com.woodare.core.util.SDFFactory;
+import com.woodare.template.helper.cache.CoinAddrs;
+import com.woodare.template.jpa.model.SubMerchantFundAccount;
+import com.woodare.template.jpa.persistence.persistence.ISubMerchantFundAccountDAO;
+
+/**
+ * @author Luke
+ */
+@Service
+public class DelayLoadCacheSchedule {
+
+	@Autowired
+	private ISubMerchantFundAccountDAO subMerchantFundAccountDAO;
+
+	private String lastLoadSubMerchantDate = null;
+
+	/**
+	 * 延迟一分钟启动装载
+	 */
+	@Scheduled(fixedDelay = 30 * 1000, initialDelay = 10 * 1000)
+	public void deplayLoadSubMerchantFundData() {
+		String nowDate = SDFFactory.DATE.format(new Date());
+		if (lastLoadSubMerchantDate == null || lastLoadSubMerchantDate.compareTo(nowDate) < 0) {
+			lastLoadSubMerchantDate = nowDate;
+
+			List<SubMerchantFundAccount> fundAccounts = subMerchantFundAccountDAO.findCoinAndAddress();
+
+			CoinAddrs.resetAll(fundAccounts);
+		}
+	}
+}

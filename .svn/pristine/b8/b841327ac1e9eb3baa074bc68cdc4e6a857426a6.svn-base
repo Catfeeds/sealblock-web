@@ -1,0 +1,119 @@
+package com.woodare.template.egw.debit;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONObject;
+import com.woodare.framework.exception.MessageWooException;
+import com.woodare.sealblock.IBlockApi;
+import com.woodare.sealblock.MockBlockApi;
+import com.woodare.sealblock.SealblockApi;
+import com.woodare.sealblock.data.SealblockAccountData;
+import com.woodare.sealblock.data.WalletData;
+import com.woodare.template.egw.base.AbstracPasswayEgw;
+import com.woodare.template.egw.base.IPasswayEgw;
+import com.woodare.template.helper.cache.PasswayRouteMerchants;
+import com.woodare.template.jpa.model.DownNoCardInvoice;
+import com.woodare.template.jpa.model.SubMerchant;
+import com.woodare.template.jpa.persistence.data.downnocardinvoice.DownNoCardInvoiceData;
+import com.woodare.template.jpa.persistence.data.submerchant.SubMerchantData;
+import com.woodare.template.web.viewdata.passwayroutemerchant.PasswayRouteMerchantViewData;
+import com.woodare.template.web.viewdata.passwayroutemerchant.SealblockCoinData;
+
+/**
+ * Sealblock渠道业务中转服务
+ * 
+ * @author Luke
+ */
+@Service("sealblockPasswayEgw")
+public class SealblockPasswayEgw extends AbstracPasswayEgw implements IPasswayEgw {
+	private IBlockApi api = null;
+
+	public SealblockPasswayEgw() {
+		if ("dev".equals(prop.getProperty("deploy.mode"))) {
+			api = new MockBlockApi();
+		}
+		else {
+			api = new SealblockApi();
+		}
+	}
+
+	public List<WalletData> listWallet(String coinAdress) throws MessageWooException {
+		return api.listWallet(coinAdress);
+	}
+
+	public SubMerchantData generateAddress(String secret) throws MessageWooException {
+		SealblockAccountData blockAccount = api.generateAccount(secret);
+
+		// user.getGoogleSecret()
+		SubMerchantData user = new SubMerchantData();
+		user.setPrikey(blockAccount.getPrikey());
+		user.setAddress(blockAccount.getBlockAddr());
+
+		return user;
+	}
+
+	public BigDecimal getBalance(String coin, String coinAddress) throws MessageWooException {
+		BigDecimal balanceAmt = new BigDecimal("0");
+
+		String weiBalance = api.getBalance(coin, coinAddress);
+		if (weiBalance != null && !"0".equals(weiBalance)) {
+			PasswayRouteMerchantViewData coinData = PasswayRouteMerchants.getByCoin(coin);
+			SealblockCoinData sealblock = coinData.getSealblock();
+
+			balanceAmt = new BigDecimal(weiBalance).divide(BigDecimal.TEN.pow(Integer.valueOf(sealblock.getDecimals()))).setScale(coinData.getPriceScale(), BigDecimal.ROUND_DOWN);
+		}
+
+		return balanceAmt;
+	}
+
+	public DownNoCardInvoiceData sendTransaction(DownNoCardInvoice invoice, SubMerchant userData) throws MessageWooException {
+		// String prefix = "Ethereum Signed Message:\n";
+		PasswayRouteMerchantViewData coinData = PasswayRouteMerchants.getByCoin(invoice.getCoin());
+		
+		SealblockCoinData sealblock = coinData.getSealblock();
+
+		JSONObject reqData = new JSONObject();
+		// 交易备注
+		reqData.put("prefix", sealblock.getPrefix());
+		// 货币标识，来自底层配置要求
+		reqData.put("txtype", sealblock.getTxType());
+
+		// 计算货币单位下金额数字
+		String weiAmount = invoice.getPrice().multiply(BigDecimal.TEN.pow(Integer.valueOf(sealblock.getDecimals()))).toBigInteger().toString();
+		// 交易金额
+		reqData.put("weiAmount", weiAmount);
+		// 用户钱包地址
+		reqData.put("sender", invoice.getUserCoinAddr());
+		// 机构钱包地址
+		reqData.put("receiv", invoice.getMercCoinAddr());
+
+		String upTransNo = api.sendTransaction(invoice.getCoin(), userData.getAddress(), userData.getPrikey(), userData.getGoogleSecret(), reqData);
+
+		DownNoCardInvoiceData newInvoice = new DownNoCardInvoiceData();
+		newInvoice.setUpTransNo(upTransNo);
+
+		return newInvoice;
+	}
+
+	/**
+	 * 生成用户钱包信息
+	 * 
+	 * @param user
+	 * @param coinType
+	 * @return
+	 * @throws MessageWooException
+	 */
+	public String createCoinWallet(String blockAddress, String coinType) throws MessageWooException {
+		String coinAddress = api.createWallet(coinType, blockAddress);
+		return coinAddress;
+	}
+
+	@Override
+	public DownNoCardInvoiceData orderQuery(DownNoCardInvoice invoice) throws MessageWooException {
+		return null;
+	}
+
+}

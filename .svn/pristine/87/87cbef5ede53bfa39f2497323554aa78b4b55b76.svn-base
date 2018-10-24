@@ -1,0 +1,34 @@
+package com.woodare.sealblock.example;
+
+import com.alibaba.fastjson.JSON;
+import com.woodare.sealblock.SealblockApi;
+import com.woodare.sealblock.data.SealblockAccountData;
+
+/**
+ * 0x0f7bb0aef075feb963484b4838a3bf358d491ca8
+ * "approverKey": "9b0843eb53c0d3c3eeefb73cc44bc0abdadbd99d83becd22729f80558945661f"
+ * ETH: 0x8cae25e5e9ce1802610f86647e14aa495ed2b017
+ * 
+ * @author Luke
+ */
+public class GenerateSealblockAccountSample {
+	static SealblockApi api = new SealblockApi();
+
+	/**
+	 * @param arg
+	 * @throws Exception
+	 */
+	public static void main(String[] arg) throws Exception {
+		String secret = "123456";
+
+		SealblockAccountData account = api.generateAccount(secret);
+		// Account: {
+		// "blockAddr":"0xa1dc9692f332bd961c22be61f7bab8d1852010c7",
+		// "prikey":"nv7K1vYX+Z6ViQ2zSyky8flFua5SqR4Fai+JrecD9fL7H+rc2R9NxRR5bN/aZ6FUI3um90+bzX8daSFsmVaBjnAy8yolAGXlyf/JM1Craig="
+		// }
+
+		System.out.println("Account: " + JSON.toJSONString(account));
+
+		api.shutdown();
+	}
+}

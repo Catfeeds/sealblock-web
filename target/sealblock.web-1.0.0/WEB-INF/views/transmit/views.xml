@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<definition extends="mf" name="/transmit/index">
+		<put-attribute name="title" value="发起支付中" />
+		<put-attribute name="body" value="/WEB-INF/views/transmit/index.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="empty" name="/transmit/gogateway">
+		<put-attribute name="title" value="载入支付网关" />
+		<put-attribute name="body" value="/WEB-INF/views/transmit/gogateway.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+	</definition>
+	<definition extends="mf" name="/transmit/result">
+		<put-attribute name="title" value="支付结果" />
+		<put-attribute name="body" value="/WEB-INF/views/transmit/result.jsp" />
+		<put-list-attribute name="styles">
+			<add-attribute value="/resources/mf/css/nocard.css" />
+		</put-list-attribute>
+	</definition>
+</tiles-definitions>

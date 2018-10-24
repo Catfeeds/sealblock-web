@@ -1,0 +1,209 @@
+package com.woodare.sealblock.util;
+
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.log4j.Logger;
+import org.msgpack.jackson.dataformat.MessagePackFactory;
+import org.zeromq.ZMQ;
+
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woodare.sealblock.rpc.Command;
+
+/**
+ * Sealblock底层链通讯服务客户端
+ * 
+ * @author Luke
+ */
+public class SealblockClient {
+	private static Logger log = Logger.getLogger(SealblockClient.class);
+
+	public static final long TIMEOUT_MILISECONDS = 5000L;
+	public static final long TRANSACTION_TIMEOUT = 30000L;
+
+	private static final int THREAD_NUM = 1;
+
+	private ZMQ.Context context;
+	private ZMQ.Socket socket;
+
+	private long timeoutMiliSeconds;
+	private ExecutorService executor;
+
+	/**
+	 * @param address
+	 */
+	public static SealblockClient newInstance(String address) {
+		return new SealblockClient(address);
+	}
+
+	private SealblockClient(String address) {
+		executor = Executors.newFixedThreadPool(THREAD_NUM);
+		timeoutMiliSeconds = TIMEOUT_MILISECONDS;
+
+		this.context = ZMQ.context(1);
+		this.socket = context.socket(ZMQ.REQ);
+		this.socket.connect(address);
+	}
+	
+	/**
+	 * 
+	 */
+	public void close() {
+		this.socket.close();
+		this.context.close();
+		this.executor.shutdown();
+	}
+
+	/**
+	 * @param tagId
+	 * @param methodName
+	 * @param args
+	 * @return
+	 * @throws SealblockException
+	 */
+	public Object invoke(final String tagId, final String methodName, final List<?> args) throws SealblockException {
+		return this.invoke(tagId, methodName, args, timeoutMiliSeconds);
+	}
+
+	/**
+	 * @param tagId
+	 * @param methodName
+	 * @param args
+	 * @param timeout
+	 * @return
+	 * @throws SealblockException
+	 */
+	public Object invoke(String tagId, String methodName, List<?> args, long timeout) throws SealblockException {
+		FutureTask<byte[]> future = null;
+
+		Object result = null;
+		try {
+			Command command = new Command(methodName, args);
+			log.debug(methodName + "Reqe[" + tagId + "]" + JSON.toJSONString(command));
+
+			byte[] commandData = null;
+			try {
+				commandData = command.toByteArray();
+			} catch (JsonProcessingException e) {
+				throw new SealblockRequestException(e.getMessage(), e);
+			}
+
+			if (socket.send(commandData, 0)) {
+				future = new FutureTask<byte[]>(new Callable<byte[]>() {
+					public byte[] call() {
+						return socket.recv(0);
+					}
+				});
+
+				executor.execute(future);
+
+				List<Object> items = null;
+				try {
+					byte[] response = future.get(timeout, TimeUnit.MILLISECONDS);
+					items = new ObjectMapper(new MessagePackFactory()).readValue(response, new TypeReference<List<Object>>() {
+					});
+				}
+				// InterruptedException, ExecutionException, TimeoutException
+				catch (Exception e) {
+					throw new SealblockResponseException(e.getMessage(), e);
+				} finally {
+					log.debug(methodName + "Resp[" + tagId + "]" + JSON.toJSONString(items));
+				}
+
+				result = processResult(items);
+
+			}
+			else {
+				// log.error("ZeroReqeErr[" + tagId + "]请求公链网络异常");
+				throw new SealblockException("公链通讯异常");
+			}
+		} finally {
+			if (future != null && !future.isDone()) {
+				future.cancel(true);
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * @param tagId
+	 * @param items
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	private Object processResult(List<Object> items) throws SealblockException {
+		String status = (String) items.get(1);
+
+		// {"v":3,"message_id":"d4467f22-0bea-42e6-98e3-000000000000","response_to":"8bde85bd008c454a87021db0a682e884"},
+		// "_zpc_hb",[0]
+
+		if ("Ok".equalsIgnoreCase(status)) {
+			Object rel = items.get(2);
+			if (rel instanceof List) {
+				rel = ((List<?>) rel).get(0);
+			}
+			return rel;
+		}
+		else {
+			List<String> errMsgs = (List<String>) items.get(2);
+			// callback.onError(errMsgs.get(1), new Exception(errMsgs.get(2)));
+			throw new SealblockException(errMsgs.get(1), new Exception(errMsgs.get(2)));
+		}
+	}
+
+	// /**
+	// * 异步执行
+	// *
+	// * @param tagId
+	// * @param methodName
+	// * @param args
+	// * @param callback
+	// * @throws IOException
+	// */
+	// public void execute(final String tagId, final String methodName, final List<?> args, ZeroRPCCallback callback) throws IOException {
+	// Command command = new Command(methodName, args);
+	//
+	// log.debug(methodName + "Reqe[" + tagId + "]" + JSON.toJSONString(command));
+	//
+	// boolean ret = socket.send(command.toByteArray(), 0);
+	// if (!ret) {
+	// log.error(methodName + "ReqeErr[" + tagId + "]请求公链网络异常");
+	// callback.onError("请求公链网络异常", new SealblockException("请求公链网络异常"));
+	// return;
+	// }
+	//
+	// executor.execute(new Runnable() {
+	// @Override
+	// public void run() {
+	// try {
+	// byte[] response = socket.recv(0);
+	// List<Object> items = new ObjectMapper(new MessagePackFactory()).readValue(response, new TypeReference<List<Object>>() {
+	// });
+	//
+	// log.debug(methodName + "Resp[" + tagId + "]" + JSON.toJSONString(items));
+	//
+	// Object result = processResult(items);
+	// callback.onResult(result);
+	// } catch (Exception e) {
+	// if (e instanceof SealblockException || e instanceof TimeoutException) {
+	// log.error(methodName + "Err[" + tagId + "]" + e.getMessage());
+	// }
+	// else {
+	// log.error(methodName + "Err[" + tagId + "]" + e.getMessage(), e);
+	// }
+	//
+	// callback.onError(e.getMessage(), e);
+	// }
+	// }
+	// });
+	// }
+}

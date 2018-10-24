@@ -1,0 +1,70 @@
+package com.lee;
+
+import java.io.InterruptedIOException;
+import java.net.SocketTimeoutException;
+
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.lee.model.ResponseData;
+import com.lee.utils.Aes;
+import com.lee.utils.HttpUtils;
+import com.lee.utils.MD5Util;
+
+public class TransUtils {
+
+	private static String ENC_KEY = "1234567812345678";
+	private static String SIGN_KEY = "1234";
+
+	public static void ut(String url, String requestString, String responseString) throws Exception {
+		try {
+			responseString = HttpUtils.post(url, requestString);
+			System.out.println("返回报文=>" + responseString);
+
+			ResponseData res = JSON.parseObject(responseString, ResponseData.class);
+
+			// 验证返回结果
+			if ("".equals(res.getState())) {
+				System.out.println(String.format("[%s]%s", res.getCode(), res.getMessage()));
+
+				String sign = MD5Util.MD5Encode(res.getPayload() + SIGN_KEY, "UTF-8").toUpperCase();
+				System.out.println("验签结果:" + sign.equals(res.getSign()));
+
+				JSONObject rspObj = JSON.parseObject(Aes.decrypt(res.getPayload(), ENC_KEY));
+				System.out.println("平台订单号:" + rspObj.getString("transNo"));
+				System.out.println("支付地址:" + rspObj.getString("payUrl"));
+				System.out.println("订单状态:" + rspObj.getString("statusDesc"));
+			}
+			// 通讯返回非成功状态结果
+			// 状态码 状态码描述
+			// 2001 参数或数值有异常
+			// 2002 订单号不能为空
+			// 3001 机构账户状态停用或其他
+			// 4001 原订单不存在
+			// 4002 重复请求订单
+			// 4003 同笔订单请求过于频繁
+			// 8001 暂无可用渠道
+			// 8002 渠道正在维护，请稍后再试
+			// 9000 验签失败
+			// 9001 解密失败
+			// 9003 未知系统异常
+			else {
+				System.out.println(String.format("[%s]%s", res.getCode(), res.getMessage()));
+			}
+		} catch (InterruptedIOException e) {
+			String kindMessage = "通讯处理异常，状态未知，可当作失败";
+			if (e instanceof ConnectionPoolTimeoutException) {
+				kindMessage = "线路繁忙，请重新发起交易，可当作失败";
+			} else if (e instanceof ConnectTimeoutException) {
+				kindMessage = "网络繁忙，请重新发起交易，可当作失败";
+			} else if (e instanceof SocketTimeoutException) {
+				kindMessage = "通讯响应超时，下单状态未知，可当作失败";
+			}
+			System.out.println("通讯异常原因=>" + kindMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

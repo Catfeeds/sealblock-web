@@ -434,6 +434,24 @@
 			<version>1.1.1</version>
 		</dependency>
 		
+		<!-- RPC &Web3j -->
+		<dependency>
+			<groupId>org.zeromq</groupId>
+			<artifactId>jeromq</artifactId>
+			<version>0.3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.msgpack</groupId>
+			<artifactId>jackson-dataformat-msgpack</artifactId>
+			<version>0.8.16</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.web3j</groupId>
+			<artifactId>core</artifactId>
+			<version>3.5.0</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>local</groupId>
 			<artifactId>jcaptcha</artifactId>
@@ -459,6 +477,7 @@
 			<artifactId>sms-http</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		
 	</dependencies>
 
 	<build>

@@ -1,0 +1,229 @@
+package com.lee;
+
+import java.io.InterruptedIOException;
+import java.net.SocketTimeoutException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.lee.model.RequestData;
+import com.lee.model.ResponseData;
+import com.lee.utils.Aes;
+import com.lee.utils.HttpUtils;
+import com.lee.utils.MD5Util;
+import com.lee.utils.SDFFactory;
+
+public class TransApi {
+	private static String MCH_NO = "T0001";
+	private static String ENC_KEY = "1234567812345678";
+	private static String SIGN_KEY = "1234";
+
+	private static String URL = "http://43.254.45.31:8080/sealblock-web";
+
+	/**
+	 *  下单支付
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
+	public static void main(String[] args) throws Exception {
+		
+		// 下单支付
+		 makeOrder();
+		 
+		//入网注册
+//		 createUser();
+	}
+	
+	/**
+	 * 下单支付
+	 * @throws Exception
+	 */
+	public static void makeOrder() throws Exception {
+		Map<String, String> payloadMap = new HashMap<String, String>();
+		// versionNo 接口版本号
+		payloadMap.put("versionNo", "1");
+		// userNo 平台用戶标识
+		payloadMap.put("userNo","5ECF64EE04BB4CDCA2820FBC481467F1");
+		//coin 货币类型
+		payloadMap.put("coin","ETH");
+		// price 交易金额, 单位：元
+		payloadMap.put("price", "0.05");
+		// tradeNo 订单号
+		payloadMap.put("tradeNo", "20181019173943146");
+		// subject 标题
+		payloadMap.put("subject", "以太币");
+		// orderDate 订单日期
+		payloadMap.put("orderDate", SDFFactory.DATETIME.format(new Date()));
+		// tradeNo 商户流水号
+		payloadMap.put("tradeNo", SDFFactory.getMemoryUniquedOrderNo());
+		// notifyUrl 异步通知URL
+		payloadMap.put("notifyUrl", "http://www.baidu.com");
+
+		String payload = JSON.toJSONString(payloadMap);
+		System.out.println("业务报文【明文】=>" + payload);
+
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+
+		String responseString = null;
+		try {
+			responseString = HttpUtils.post(URL + "/ws/trans/nocard/makeOrder", requestString);
+			System.out.println("返回报文=>" + responseString);
+
+			ResponseData res = JSON.parseObject(responseString, ResponseData.class);
+
+			// 验证返回结果
+			if ("".equals(res.getState())) {
+				System.out.println(String.format("[%s]%s", res.getCode(), res.getMessage()));
+
+				String sign = MD5Util.MD5Encode(res.getPayload() + SIGN_KEY, "UTF-8").toUpperCase();
+				System.out.println("验签结果:" + sign.equals(res.getSign()));
+
+				JSONObject rspObj = JSON.parseObject(Aes.decrypt(res.getPayload(), ENC_KEY));
+				System.out.println("平台订单号:" + rspObj.getString("transNo"));
+				System.out.println("支付地址:" + rspObj.getString("payUrl"));
+				System.out.println("订单状态:" + rspObj.getString("statusDesc"));
+			}
+			// 通讯返回非成功状态结果
+			// 状态码 状态码描述
+			// 2001 参数或数值有异常
+			// 2002 订单号不能为空
+			// 3001 机构账户状态停用或其他
+			// 4001 原订单不存在
+			// 4002 重复请求订单
+			// 4003 同笔订单请求过于频繁
+			// 8001 暂无可用渠道
+			// 8002 渠道正在维护，请稍后再试
+			// 9000 验签失败
+			// 9001 解密失败
+			// 9003 未知系统异常
+			else {
+				System.out.println(String.format("[%s]%s", res.getCode(), res.getMessage()));
+			}
+		} catch (InterruptedIOException e) {
+			String kindMessage = "通讯处理异常，状态未知，可当作失败";
+			if (e instanceof ConnectionPoolTimeoutException) {
+				kindMessage = "线路繁忙，请重新发起交易，可当作失败";
+			}
+			else if (e instanceof ConnectTimeoutException) {
+				kindMessage = "网络繁忙，请重新发起交易，可当作失败";
+			}
+			else if (e instanceof SocketTimeoutException) {
+				kindMessage = "通讯响应超时，下单状态未知，可当作失败";
+			}
+			System.out.println("通讯异常原因=>" + kindMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * 入网注册
+	 * @throws Exception
+	 */
+	public static void createUser() throws Exception {
+		Map<String, String> payloadMap = new HashMap<String, String>();
+
+		//机构号
+		payloadMap.put("mchNo","T0001");
+		//机构用户标识
+		payloadMap.put("mchUserNo","ORG181022102844014");
+		//用户姓名
+		payloadMap.put("userName", "香蜜");
+		//用户身份证
+		payloadMap.put("userCertId", "321323840014484339");
+		//用户联系电话
+		payloadMap.put("userPhone", "16784841872");
+		//以开通货币，用逗号隔开
+		payloadMap.put("enabledCoin", "ETH");
+		
+
+		String payload = JSON.toJSONString(payloadMap);
+		System.out.println("业务报文【明文】=>" + payload);
+
+		String encpayload = Aes.encrypt(payload, ENC_KEY);
+		System.out.println("业务报文【密文】=>" + encpayload);
+		System.out.println("业务报文【明文2】=>" + Aes.decrypt(encpayload, ENC_KEY));
+
+		String signval = MD5Util.MD5Encode(encpayload + SIGN_KEY, "UTF-8").toUpperCase();
+		System.out.println("签名结果=>" + signval);
+
+		RequestData req = new RequestData();
+		req.setMchNo(MCH_NO);
+		req.setPayload(encpayload);
+		req.setSign(signval);
+
+		String requestString = JSON.toJSONString(req);
+		System.out.println("外部报文=>" + requestString);
+
+		String responseString = null;
+		try {
+			responseString = HttpUtils.post(URL + "/ws/trans/subMerchant/createUser", requestString);
+			System.out.println("返回报文=>" + responseString);
+
+			ResponseData res = JSON.parseObject(responseString, ResponseData.class);
+
+			// 验证返回结果
+			if ("".equals(res.getState())) {
+				System.out.println(String.format("[%s]%s", res.getCode(), res.getMessage()));
+
+				String sign = MD5Util.MD5Encode(res.getPayload() + SIGN_KEY, "UTF-8").toUpperCase();
+				System.out.println("验签结果:" + sign.equals(res.getSign()));
+
+				JSONObject rspObj = JSON.parseObject(Aes.decrypt(res.getPayload(), ENC_KEY));
+				System.out.println("平台订单号:" + rspObj.getString("transNo"));
+				System.out.println("支付地址:" + rspObj.getString("payUrl"));
+				System.out.println("订单状态:" + rspObj.getString("statusDesc"));
+			}
+			// 通讯返回非成功状态结果
+			// 状态码 状态码描述
+			// 2001 参数或数值有异常
+			// 2002 订单号不能为空
+			// 3001 机构账户状态停用或其他
+			// 4001 原订单不存在
+			// 4002 重复请求订单
+			// 4003 同笔订单请求过于频繁
+			// 8001 暂无可用渠道
+			// 8002 渠道正在维护，请稍后再试
+			// 9000 验签失败
+			// 9001 解密失败
+			// 9003 未知系统异常
+			else {
+				System.out.println(String.format("[%s]%s", res.getCode(), res.getMessage()));
+			}
+		} catch (InterruptedIOException e) {
+			String kindMessage = "通讯处理异常，状态未知，可当作失败";
+			if (e instanceof ConnectionPoolTimeoutException) {
+				kindMessage = "线路繁忙，请重新发起交易，可当作失败";
+			}
+			else if (e instanceof ConnectTimeoutException) {
+				kindMessage = "网络繁忙，请重新发起交易，可当作失败";
+			}
+			else if (e instanceof SocketTimeoutException) {
+				kindMessage = "通讯响应超时，下单状态未知，可当作失败";
+			}
+			System.out.println("通讯异常原因=>" + kindMessage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

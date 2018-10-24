@@ -1,0 +1,61 @@
+package com.woodare.sealblock.example;
+
+import java.math.BigDecimal;
+
+import com.alibaba.fastjson.JSONObject;
+import com.woodare.sealblock.SealblockApi;
+
+/**
+ * // "approverAddress": "0x0f7bb0aef075feb963484b4838a3bf358d491ca8",
+ * // "approverKey": "9b0843eb53c0d3c3eeefb73cc44bc0abdadbd99d83becd22729f80558945661f"
+ * 
+ * @author Luke
+ */
+public class SendTransactionSample {
+	static SealblockApi api = new SealblockApi();
+
+	/**
+	 * coinConfigJSON.put("ETH_txType","0000000000000000000000000000000000000000");
+	 * coinConfigJSON.put("ETH_decimal",18);
+	 * coinConfigJSON.put("BTC_txType","BTC-BTC-BTC-BTC-BTC-BTC-BTC-BTC-BTC-BTC-");
+	 * coinConfigJSON.put("BTC_decimal",8);
+	 * 
+	 * @param arg
+	 * @throws Exception
+	 */
+	public static void main(String[] arg) throws Exception {
+		// Sealblock-Address
+		String sealblockAddr = "1eb1734668a281c8bb9ed9a14ae4d68107fa596c";
+		// Sealblock-Private-Key
+		String sealblockPrikey = "AXUp7AaOocQnamgxM6ijHBWR+J2xNMASjLJgXXgS9oNhGSzDjhT/g8vbT6zKep44YEX/t4pgqOWZQdFacS4j8skockRoqjFJwYmOeGcA4TI=";
+
+		String coinType = "ETH";
+		// Coin-Address-From[ETH], Sealblock-Mine-Eth-Account
+		String coinRealAddrSender = "460992e83d7137a57483a0b6a49b3b9676d4f543";
+		// Coin-Address-To[ETH], Luke-UFO-Account
+		String coinRealAddrReceiver = "b3822a42212662c621cd8ce442525ade337431a9";
+
+		String secret = "123456";
+		// 金额
+		BigDecimal amount = new BigDecimal("0.01");
+		// 计算货币单位下金额数字
+		String weiAmount = amount.multiply(BigDecimal.TEN.pow(18)).toBigInteger().toString();
+
+		JSONObject reqData = new JSONObject();
+		// 交易备注
+		reqData.put("prefix", "Ethereum Signed Message:");
+		// 货币标识，来自底层配置要求
+		reqData.put("txtype", "0000000000000000000000000000000000000000");
+		// 货币单位下数量
+		reqData.put("weiAmount", weiAmount);
+		// 转出钱包地址
+		reqData.put("sender", coinRealAddrSender);
+		// 转入钱包地址
+		reqData.put("receiv", coinRealAddrReceiver);
+
+		String resp = api.sendTransaction(coinType, sealblockAddr, sealblockPrikey, secret, reqData);
+		System.out.println(resp);
+
+		api.shutdown();
+	}
+}

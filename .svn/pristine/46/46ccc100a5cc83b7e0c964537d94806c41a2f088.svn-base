@@ -1,0 +1,35 @@
+package com.woodare.sealblock.example;
+
+import com.woodare.sealblock.SealblockApi;
+
+/**
+ * @author Luke
+ */
+public class CreateWalletSample {
+	static SealblockApi api = new SealblockApi();
+
+	/**
+	 * @param arg
+	 * @throws Exception
+	 */
+	public static void main(String[] arg) throws Exception {
+		// Account: {
+		// "blockAddr": "1eb1734668a281c8bb9ed9a14ae4d68107fa596c",
+		// "prikey": "AXUp7AaOocQnamgxM6ijHBWR+J2xNMASjLJgXXgS9oNhGSzDjhT/g8vbT6zKep44YEX/t4pgqOWZQdFacS4j8skockRoqjFJwYmOeGcA4TI="
+		// }
+		//
+		String approverAddr = "1eb1734668a281c8bb9ed9a14ae4d68107fa596c";
+		String coinType = "ETH";
+
+		String coinAddress = api.createWallet(coinType, approverAddr);
+		System.out.println("Generated Coin Address: " + coinAddress);
+
+		// 2018/10/21 19:48:33.498 [DEBUG] [main] [SealblockClient]
+		// create_walletReqe[1540122512466|1eb1734668a281c8bb9ed9a14ae4d68107fa596c]{"args":["1eb1734668a281c8bb9ed9a14ae4d68107fa596c","ETH"],"headerMap":{"message_id":"342a9a1675824d519bfea82dda73deb9","response_to":"342a9a1675824d519bfea82dda73deb9","v":3},"methodName":"create_wallet"}
+		// 2018/10/21 19:48:34.606 [DEBUG] [main] [SealblockClient]
+		// create_walletResp[1540122512466|1eb1734668a281c8bb9ed9a14ae4d68107fa596c][{"v":3,"message_id":"b271d029-1c6b-41f7-aeef-000000000004","response_to":"342a9a1675824d519bfea82dda73deb9"},"OK",["460992e83d7137a57483a0b6a49b3b9676d4f543"]]
+		// Generated Coin Address: 460992e83d7137a57483a0b6a49b3b9676d4f543
+		//
+		api.shutdown();
+	}
+}

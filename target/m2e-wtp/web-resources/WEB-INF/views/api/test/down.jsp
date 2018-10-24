@@ -85,7 +85,9 @@
 				</tr>
 				<tr>
 					<td class="label">短信验证码:</td>
-					<td class="field"><input type="text" name="smsCode" value="" /></td>
+					<td class="field"><input type="text" name="smsCode" value="" /><br>
+						<p>测试环境下，默认为： 111111</p>
+					</td>
 				</tr>
 				<tr>
 					<td class="label" colspan='2'><div style="float: right;"><input type='submit' class="animated pulse" value="提交" />	</div></td>
@@ -100,10 +102,6 @@
 				<tr>
 					<td class="label">平台订单号:</td>
 					<td class="field"><input type="text" name="transNo" value="" /></td>
-				</tr>
-				<tr>
-					<td class="label">短信验证码:</td>
-					<td class="field"><input type="text" name="smsCode" value="" /></td>
 				</tr>
 				<tr>
 					<td class="label" colspan='2'><div style="float: right;"><input type='submit' class="animated pulse" value="提交" />	</div></td>

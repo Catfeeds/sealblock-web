@@ -73,7 +73,7 @@
 </div>  --%>
 	
 	  <div class="ms-col-fix-300 clear" >
-		<utils:hideColumn defaultVal="手续费（元）,清算金额（元）,平台分润（元）" />
+		<utils:hideColumn defaultVal="清算额,代理分润,平台分润,机构流水号" />
 	</div>
 	
 	 <input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input>
@@ -103,6 +103,7 @@
 		<td>受理时间</td>
 		<td>交易状态</td>
 		<td>状态时间</td>
+		<td>结算状态</td>
 		<td>操作</td>
 	</tr>
 	
@@ -146,6 +147,9 @@
 			<td>
 				<fmt:formatDate value="${item.statusChgDate}" pattern="MM/dd HH:mm:ss"/>
 			</td>
+			<td >
+				<label style="weight: bold;"><utils:enum mode="lbl" value="${item.fundStatus}" key="EnumOrderStatus" /></label>
+			</td>
 			<td>
 				<a href="<c:url value="/admin/downNoCardInvoice/detail?id=${item.id}" />" class="choose-link operate-detail">详情</a>
 				<%-- <a href="<c:url value="/admin/downNoCardInvoice/check/${item.id}" />" class="choose-link operate-check">同步</a> --%>
@@ -182,6 +186,7 @@
 			<td align='right'><label style="font-weight: bold; color: blue;">
 				${profit}</label>
 			</td>
+			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>

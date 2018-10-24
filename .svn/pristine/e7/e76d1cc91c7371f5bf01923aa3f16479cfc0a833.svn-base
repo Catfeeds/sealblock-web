@@ -1,0 +1,75 @@
+package com.woodare.template.egw.base;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import com.woodare.framework.exception.MessageWooException;
+import com.woodare.sealblock.data.WalletData;
+import com.woodare.template.jpa.model.DownNoCardInvoice;
+import com.woodare.template.jpa.model.SubMerchant;
+import com.woodare.template.jpa.persistence.data.downnocardinvoice.DownNoCardInvoiceData;
+import com.woodare.template.jpa.persistence.data.submerchant.SubMerchantData;
+
+/**
+ * 通道交易核心处理接口
+ * 
+ * @author Luke
+ */
+public interface IPasswayEgw {
+	/**
+	 * 生成用户钱包地址
+	 * 
+	 * @param secret
+	 * @return
+	 * @throws Exception
+	 */
+	SubMerchantData generateAddress(String secret) throws MessageWooException;
+
+	/**
+	 * 生成货币地址
+	 * 
+	 * @param blockAddress
+	 * @param coinType
+	 * @return
+	 * @throws Exception
+	 */
+	String createCoinWallet(String blockAddress, String coinType) throws MessageWooException;
+
+	/**
+	 * 查询特定地址下钱包地址信息
+	 * 
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
+	List<WalletData> listWallet(String coinAdress) throws MessageWooException;
+
+	/**
+	 * 查询用户货币下余额
+	 * 
+	 * @param coin
+	 * @param coinAddress
+	 * @return
+	 * @throws Exception
+	 */
+	BigDecimal getBalance(String coin, String coinAddress) throws MessageWooException;
+
+	/**
+	 * 广播发送用户交易
+	 * 
+	 * @param invoice
+	 * @param userData
+	 * @return
+	 * @throws Exception
+	 */
+	DownNoCardInvoiceData sendTransaction(DownNoCardInvoice invoice, SubMerchant userData) throws MessageWooException;
+
+	/**
+	 * 查询用户交易状态
+	 * 
+	 * @param reqData
+	 * @return
+	 * @throws MessageWooException
+	 */
+	DownNoCardInvoiceData orderQuery(DownNoCardInvoice invoice) throws MessageWooException;
+}

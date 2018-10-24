@@ -70,7 +70,7 @@
 				<tr>
 					<td class="liner-box-left">交易费率:</td>
 					<td class="liner-box-right">
-						<input type="text" class="input-box"  value="${item.feeRatio}" readonly/>%。
+						<input type="text" class="input-box"  value="${item.feeRatio}%" readonly/>
 					</td>
 				</tr>
 				<tr>
