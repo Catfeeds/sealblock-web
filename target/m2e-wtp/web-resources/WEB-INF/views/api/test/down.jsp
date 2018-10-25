@@ -128,11 +128,7 @@
 		<form action="<spring:url value="/ws/trans/nocard/accBalQuery"></spring:url>" method="post" class="enc-service-form">
 			<table class="editor">
 				<tr>
-					<td class="label">机构号:</td>
-					<td class="field"><input type="text" name="mchNo" value="A0001" /></td>
-				</tr>
-				<tr>
-					<td class="label" colspan='2'><div style="float: right;"><input type='submit' class="animated pulse" value="提交" />	</div></td>
+					<td class="label"colspan='2' ><div style="float: right;"><input type='submit' class="animated pulse" value="提交" />	</div></td>
 				</tr>
 			</table>
 		</form>

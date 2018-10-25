@@ -29,6 +29,10 @@
 	<input type="text" class="input-box search-input-box" placeholder="下游流水号" name="tradeNo" value="${search.tradeNo}"></input>
 	</div>
 	<div class="ms-col-fix-100 clear">
+	<label for="channel">通道号：</label>
+	<utils:combo name="channel" cssName="input-box search-input-box" value="${search.channel}"></utils:combo>
+	</div>
+	<div class="ms-col-fix-100 clear">
 	<label for="mode">清算类型：</label>
 	<select name="mode" class="input-box search-input-box">
 		<option value="">全部

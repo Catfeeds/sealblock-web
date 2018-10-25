@@ -29,10 +29,6 @@
 	<input type="text" class="input-box search-input-box" placeholder="下游流水号" name="tradeNo" value="${search.tradeNo}"></input>
 	</div>
 	<div class="ms-col-fix-100 clear">
-	<label for="channel">通道号：</label>
-	<utils:combo name="channel" cssName="input-box search-input-box" value="${search.channel}"></utils:combo>
-	</div>
-	<div class="ms-col-fix-100 clear">
 	<label for="mode">清算类型：</label>
 	<select name="mode" class="input-box search-input-box">
 		<option value="">全部
@@ -105,8 +101,6 @@
 </form> --%>
 <table class="list-wapper">
 	<tr class="list-header">
-		<td>渠道</td>
-		<td>渠道商户</td>
 		<td>平台流水号</td>
 		<td>机构号</td>
 		<td>机构名称</td>
@@ -136,8 +130,6 @@
 	
 	<c:forEach var="item" items="${res.items}" varStatus="status">
 		<tr class="list-item">
-			<td><utils:combo mode="lbl" value="${item.channel}" /></td>
-			<td><utils:combo mode="lbl" value="${item.channelAccName}" /></td>
 			<td><c:out value="${item.transNo}" /></td>
 			<td><c:out value="${item.mchNo}" /></td>
 			<td><c:out value="${item.mchName}" /></td>

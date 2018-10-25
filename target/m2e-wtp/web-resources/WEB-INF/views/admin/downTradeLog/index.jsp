@@ -21,11 +21,6 @@ $(function() {
 <form class="search-form" action="<c:url value="/admin/downTradeLog/index" />" method="post">
 	<input type="hidden" name="searchFlag" value="true" />
 	<div class="ms-col-fix-100 clear">
-		<label for="mchNo">通道：</label>
-		<utils:combo mode="sel" name="channel" cssName="input-box search-input-box" value="${search.channel}"></utils:combo>
-	</div>
-	
-	<div class="ms-col-fix-100 clear">
 		<label for="keywords">机构号：</label>
 		<input type="text" class="input-box search-input-box" placeholder="商户编号" name="mchNo" value="${search.mchNo}"></input>
 	</div>
@@ -67,7 +62,6 @@ $(function() {
 		<td>受理时间</td>
 		<td>金额</td>
 		<td>交易信息</td>
-		<td>通道</td>
 		<td>报错信息</td>
 	</tr>
 	<c:forEach var="item" items="${res.items}" varStatus="status">
@@ -95,9 +89,6 @@ $(function() {
 			<td>
 				<c:out value="${item.accBankName}" /><br>
 				<c:out value="${item.accCardNo}" />
-			</td>
-			<td>
-				<utils:combo mode="lbl" value="${item.channel}" />
 			</td>
 			<td>
 				<c:out value="${item.errMsg}" />(<c:out value="${item.errCode}" />)

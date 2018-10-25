@@ -67,6 +67,7 @@ table.list-wapper td.num {
 	<tr class="list-header">
 		<th>机构号</th>
 		<th>机构名称</th>
+		<th>支付方式</th>
 		<th>交易成功率</th>
 		<th>总金额（元）</th>
 		<th>总数</th>
@@ -94,6 +95,9 @@ table.list-wapper td.num {
 			</td>
 			<td style="text-align:left;">
 				<c:out value="${item.mchName}" />
+			</td>
+			<td>
+				<utils:paytype mode='lbl' value="${item.payType }"/>
 			</td>
 			<td class="warning">
 				<my:percent value="${item.count}" total="${item.totalCount}"/>

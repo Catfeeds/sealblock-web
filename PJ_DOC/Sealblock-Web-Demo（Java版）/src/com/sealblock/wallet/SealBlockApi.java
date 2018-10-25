@@ -25,7 +25,7 @@ public class SealBlockApi {
 	// 服务器连接地址
 	public static String URL = "http://localhost:8080/sealblock-web/ws/trans";
 	// 机构号
-	public static String MCH_NO = "T0001";
+	public static String MCH_NO = "T00f1";
 	// 加密密钥
 	public static String ENC_KEY = "1234567812345678";
 	// 签名密钥

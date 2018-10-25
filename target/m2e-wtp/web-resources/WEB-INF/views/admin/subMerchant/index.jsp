@@ -11,9 +11,7 @@ $(function(){
 <form class="search-form" action="<c:url value="/admin/subMerchant/index" />" method="post">
 	<div class="search-group">
 		<label for="keywords">关键字：</label>
-		<input type="text" class="input-box search-input-box" placeholder="关键字" name="keywords" value="${search.keywords}"></input>
-<<<<<<< .mine
-		
+		<input type="text" class="input-box search-input-box" placeholder="关键字" name="keywords" value="${search.keywords}"></input>	
 <%-- 		<label for="changeDate">时间：</label>
 	<label for="startDate" class="custom-d-cate">From：</label>
 	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate" value="${search.startDate}">
@@ -26,8 +24,6 @@ $(function(){
 			$(".custom-d-cate")[$(this).val() == 'CUSTOM' ? "show" : "hide"]();
 		}).change();
 	</script> --%>
-||||||| .r9
-=======
 		
 <%-- 	<label for="startDate" class="custom-d-cate">开始时间：</label>
 	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate"  value="${search.startDate}"/>
@@ -46,7 +42,6 @@ $(function(){
 	</select>
 	
 	<utils:hideColumn defaultVal="手续费（元）,清算金额（元）,平台分润（元）" />
->>>>>>> .r40
 	</div>
 		
 	<input type="hidden" name="pageIndex" value="${search.pageIndex}"></input>
@@ -66,17 +61,7 @@ $(function(){
 		<td>用户联系电话</td>
 		<td>用户状态</td>
 		<td>鉴权日期</td>
-<<<<<<< .mine
 		<td>已开通币类型</td>
-		<td>备用字段1</td>
-		<td>备用字段 2</td>
-||||||| .r9
-		<td>已开通币类型，多个逗号分隔开</td>
-		<td>备用字段1</td>
-		<td>备用字段 2</td>
-=======
-		<td>已开通币类型</td>
->>>>>>> .r40
 		<td>操作</td>
 	</tr>
 	<c:forEach var="item" items="${res.items}" varStatus="itemStatus" >

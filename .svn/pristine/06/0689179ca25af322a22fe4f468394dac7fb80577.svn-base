@@ -32,10 +32,26 @@ table.list-wapper td.num {
 		<option value="Merchant" <c:if test="${empty search.accountType or search.accountType eq 'Merchant'}">selected</c:if>>机构</option>
 		<option value="Agent" <c:if test="${search.accountType eq 'Agent'}">selected</c:if>>代理商</option>
 	</select>
+
+	<label for="coinName">公链平台：</label>
+		<utils:enum mode="sel" name="coinName" needDefaultValue="全部" cssName="input-box search-input-box" value="${search.coinName}" key="EnumDownNoCardChannel" />
+	</select>
+
+	<label for="startDate" class="custom-d-cate">开始时间：</label>
+	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="开始时间" name="startDate" value="${search.startDate}">
+	<label for="endDate" class="custom-d-cate">结束时间：</label>
+	<input type="text" class="input-box search-input-box date-picker custom-d-cate" placeholder="结束时间" name="endDate" value="${search.endDate}">
+	
+	<script>
+		$(".date-picker").datepicker($.datepicker.regional[ "zh-CN" ]);
+		$("select[name='dateCate']").change(function(){
+			$(".custom-d-cate")[$(this).val() == 'CUSTOM' ? "show" : "hide"]();
+		}).change();
+	</script>
 	
 	 <label>&nbsp;</label>
 	<input type="checkbox" style="width: 15px;" <c:if test="${search.searchFlag eq true  }">checked="checked"</c:if> class="input-box search-input-box" 
-		id="changedFlag" placeholder="仅显示交易商户" name="searchFlag" value="true"></input>
+		id="changedFlag" placeholder="仅显示交易商户" name="searchFlag"></input>
 	<label for="changedFlag" style="text-align: left; padding-left: 5px;">存在余额变动</label>
 	
 	<%-- <input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input> --%>
@@ -49,8 +65,8 @@ table.list-wapper td.num {
 	<tr class="list-header">
 		<td>账户类别</td>
 		<td style="text-align: left;">名称</td>
+		<td>公链平台</td>
 		<td>授信比</td>
-		
 		<td>记账日期</td>
 		<td>T1结算额（元）</td>
 		<td>T1已代付（元）</td>
@@ -81,6 +97,7 @@ table.list-wapper td.num {
 				<c:if test="${item.accountType eq 'Agent'}">代理商</c:if>
 			</td>
 			<td style="text-align: left;"><c:out value="${item.mchName}" />(<c:out value="${item.mchNo}" />)</td>
+			<td><c:out value="${item.coinName}" /></td>
 			<td><c:out value="${item.creditRatio}"/>%</td>
 		    <td><utils:dateFormat value="${item.changeDate}" /></td>
 			<td class="num">${item.settleInAmt }</td>
@@ -103,7 +120,8 @@ table.list-wapper td.num {
 		</tr>
 	</c:forEach> 
 	
-	<c:if test="${rowNum gt 0 }">
+	<!-- 取消合计 -->
+	<%-- <c:if test="${rowNum gt 0 }">
 		<tr class="list-item" style="font-weight: bold;">
 			<td></td>
 			<td align='right'>合计：</td>
@@ -118,7 +136,7 @@ table.list-wapper td.num {
 			<td class="num"><fmt:formatNumber value="${item.frozenAmt / 100}" pattern="#,##0.00#"/>&nbsp;</td>
 			<td class="num">&nbsp;</td>
 		</tr>
-	</c:if>
+	</c:if> --%>
 </table>
 <div style="border: none; text-align: right;width: 98%;margin: 0px auto; color: #1C1C1E; font-size: 0.9rem;">
 	<utils:pager></utils:pager>
