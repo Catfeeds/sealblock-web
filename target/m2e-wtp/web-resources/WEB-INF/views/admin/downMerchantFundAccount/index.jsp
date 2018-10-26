@@ -52,7 +52,7 @@ table.list-wapper td.num {
 	 <label>&nbsp;</label>
 	<input type="checkbox" style="width: 15px;" <c:if test="${search.searchFlag eq true  }">checked="checked"</c:if> class="input-box search-input-box" 
 		id="changedFlag" placeholder="仅显示交易商户" name="searchFlag"></input>
-	<label for="changedFlag" style="text-align: left; padding-left: 5px;">存在余额变动</label>
+	<label for="changedFlag" style="text-align: left; padding-left: 5px;margin-top: 4px;">存在余额变动</label>
 	
 	<%-- <input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input> --%>
 	<div class="space"></div>

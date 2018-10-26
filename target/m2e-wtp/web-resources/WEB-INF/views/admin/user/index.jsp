@@ -20,10 +20,12 @@ $(function(){
 			<option value="LIQUIDATING" <c:if test="${search.userRole eq 'LIQUIDATING'}">selected</c:if>>清算员
 			<option value="OPERATION" <c:if test="${search.userRole eq 'OPERATION'}">selected</c:if>>系统管理员
 		</select>
+		<input style="
+    margin-left: 48px;
+" type="submit" value="搜索" class="btn"></input>
 	</div>
 	<input type="hidden" name="pageIndex" value="${search.pageIndex}"></input><input type="hidden" name="pageSize" value="${search.pageSize}"></input>
 	<input type="hidden" name="pageSize" value="${search.pageSize}"></input>
-	<input type="submit" value="搜索" class="btn"></input>
 	<c:if test="${empty accRole or accRole eq 'SUPERVISOR' or accRole eq 'OPERATION' }">
 	<a href="<c:url value="/admin/user/add"/>" class="btn btn-orange pull-right operate-detail" >新建</a>
 	</c:if>

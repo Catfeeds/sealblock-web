@@ -33,7 +33,10 @@ $(function(){
 	</div>
 	<input type="hidden" name="pageIndex" value="${search.pageIndex}"></input>
 	<input type="hidden" name="pageSize" value="${search.pageSize}"></input>
-	<input type="submit" value="搜索" class="btn"></input>
+	<input style="
+    margin-bottom: 10px;
+    margin-left: 32px;
+" type="submit" value="搜索" class="btn"></input>
 <%-- 	<a href="<c:url value="/admin/subMerchantFundAccount/add" />" class="btn btn-orange pull-right operate-detail" >新建</a> --%>
 </form>
 <table class="list-wapper">

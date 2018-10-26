@@ -58,7 +58,8 @@ table.list-wapper td.num {
 			$(".custom-d-cate")[$(this).val() == 'CUSTOM' ? "show" : "hide"]();
 		}).change();
 	</script>
-	<input type="submit" value="搜索" class="btn"></input>
+	
+	<input style="margin-left: 84px;" type="submit" value="搜索" class="btn"></input>
 </form>
 <form action="<c:url value="/admin/downNoCardInvoice/exportSum" />" target="_blank" method="post" class="export-form">
 	<input type="submit" value="导出" class="btn btn-orange export-btn" ></input>

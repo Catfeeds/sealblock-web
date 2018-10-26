@@ -46,7 +46,11 @@ $(function(){
 		
 	<input type="hidden" name="pageIndex" value="${search.pageIndex}"></input>
 	<input type="hidden" name="pageSize" value="${search.pageSize}"></input>
-	<input type="submit" value="搜索" class="btn"></input>
+	<input style="
+    border-bottom-width: 5px;
+    margin-bottom: 10px;
+    margin-left: 123px;
+" type="submit" value="搜索" class="btn"></input>
 </form>
 <table class="list-wapper">
 	<tr class="list-header">
