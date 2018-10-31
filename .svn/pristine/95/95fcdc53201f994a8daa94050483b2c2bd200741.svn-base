@@ -1,0 +1,135 @@
+package com.woodare.template.jpa.model;
+
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
+import com.woodare.core.base.AbstractBusiModel;
+import com.woodare.framework.annotation.EntityDescriptor;
+import com.woodare.template.jpa.model.data.EnumDownNoCardChannel;
+import com.woodare.template.jpa.model.data.EnumDownUserStatus;
+
+/**
+ * ClassName: DownBalanceTransfer
+ * 
+ * @description
+ * @author Luke
+ * @Date Oct. 31, 2018
+ */
+@Entity
+@EntityDescriptor(name = "转账交易", category = "content")
+public class DownBalanceTransfer extends AbstractBusiModel {
+	private static final long serialVersionUID = 2788988110132939550L;
+	
+	/** 转账流水号 */
+	@Column(length = 64, nullable = false)
+	private String tradeNo;
+	
+	/** 转账金额 */
+	@Column(scale = 2, precision = 9)
+	private BigDecimal price;
+	
+	/** 转账发送方标识 */
+	@Column(length = 32, nullable = false)
+	private String userNo;
+	
+	/** 转账接收方标识 */
+	@Column(length = 32, nullable = false)
+	private String userTwoNo;
+	
+	/** 转账发送方货币地址 */
+	@Column(length = 128, nullable = false)
+	private String userCoinAddr;
+	
+	/** 转账接收方货币地址 */
+	@Column(length = 128, nullable = false)
+	private String userTwoCoinAddr;
+	
+	/** 转账时间时间, 格式：yyyyMMddHHmmss */
+	@Column(length = 14, nullable = false)
+	private String orderDate;
+	
+	/** 转账处理状态, 0-转账失败、1-转账成功 */
+	@Enumerated(EnumType.STRING)
+	private int status;
+	
+	/** 转账备注 */
+	@Column(length = 20, nullable = false)
+	private String subject;
+
+	public String getTradeNo() {
+		return tradeNo;
+	}
+
+	public void setTradeNo(String tradeNo) {
+		this.tradeNo = tradeNo;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public String getUserNo() {
+		return userNo;
+	}
+
+	public void setUserNo(String userNo) {
+		this.userNo = userNo;
+	}
+
+	public String getUserTwoNo() {
+		return userTwoNo;
+	}
+
+	public void setUserTwoNo(String userTwoNo) {
+		this.userTwoNo = userTwoNo;
+	}
+
+	public String getUserCoinAddr() {
+		return userCoinAddr;
+	}
+
+	public void setUserCoinAddr(String userCoinAddr) {
+		this.userCoinAddr = userCoinAddr;
+	}
+
+	public String getUserTwoCoinAddr() {
+		return userTwoCoinAddr;
+	}
+
+	public void setUserTwoCoinAddr(String userTwoCoinAddr) {
+		this.userTwoCoinAddr = userTwoCoinAddr;
+	}
+
+	public String getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+		
+}

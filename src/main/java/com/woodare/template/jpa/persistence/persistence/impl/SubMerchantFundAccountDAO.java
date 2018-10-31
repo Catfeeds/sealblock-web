@@ -198,7 +198,7 @@ public class SubMerchantFundAccountDAO extends AbstractPagedDAO<SubMerchantFundA
 	 */
 	@Override
 	public int changeBalance(SubMerchantFundAccountData diffModel) {
-		List<TypeCondition> conditions = new ArrayList<TypeCondition>();
+		List<TypeCondition> columns = new ArrayList<TypeCondition>();
 		List<TypeCondition> wheres = new ArrayList<TypeCondition>();
 
 		// 设置资金状态变化标识
@@ -219,11 +219,11 @@ public class SubMerchantFundAccountDAO extends AbstractPagedDAO<SubMerchantFundA
 		// }
 		// 账户余额
 		if (diffModel.getSettleInAmt() != null) {
-			conditions.add(new TypeCondition("settleInAmt", "a.settleInAmt = a.settleInAmt + :settleInAmt", diffModel.getSettleInAmt()));
+			columns.add(new TypeCondition("settleInAmt", "a.settleInAmt = a.settleInAmt + :settleInAmt", diffModel.getSettleInAmt()));
 		}
 		// 消费金额
 		if (diffModel.getSettleOutAmt() != null) {
-			conditions.add(new TypeCondition("settleOutAmt", "a.settleOutAmt = a.settleOutAmt + :settleOutAmt", diffModel.getSettleOutAmt()));
+			columns.add(new TypeCondition("settleOutAmt", "a.settleOutAmt = a.settleOutAmt + :settleOutAmt", diffModel.getSettleOutAmt()));
 			wheres.add(new TypeCondition("settleOutAmtCon", "a.settleInAmt >= a.frozenAmt + a.settleOutAmt + :settleOutAmtCon", diffModel.getSettleOutAmt()));
 		}
 		// // 冻结金额
@@ -235,18 +235,18 @@ public class SubMerchantFundAccountDAO extends AbstractPagedDAO<SubMerchantFundA
 		// // wheres.add(new TypeCondition("creditRatio", "(" + t1LeftFrozenEnough + " or " + t1FrozenNotEnough + ")", merchantData.getCreditRatio()));
 		// }
 		if (diffModel.getChangeDate() != null) {
-			wheres.add(new TypeCondition("changeDate", "a.changeDate = :changeDate", diffModel.getChangeDate()));
+			columns.add(new TypeCondition("changeDate", "a.changeDate = :changeDate", diffModel.getChangeDate()));
 		}
 
 		StringBuffer sql = new StringBuffer();
 		sql.append("update SubMerchantFundAccount a ");
-		sql.append(" set " + this.joinConditions(conditions, ","));
+		sql.append(" set " + this.joinConditions(columns, ","));
 		sql.append(" where " + this.joinConditions(wheres, " and "));
 
-		conditions.addAll(wheres);
+		columns.addAll(wheres);
 
 		Query executeQuery = this.getEntityManager().createQuery(sql.toString());
-		this.addParameters(executeQuery, conditions);
+		this.addParameters(executeQuery, columns);
 
 		return executeQuery.executeUpdate();
 	}

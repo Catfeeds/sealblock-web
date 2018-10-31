@@ -612,9 +612,9 @@
 					<basePackage>com.woodare.template</basePackage>
 					<scanPackage>com.woodare.template.jpa.model</scanPackage>
 					<persistencePackage>com.woodare.template.jpa.persistence</persistencePackage>
-					<!-- <controllerBasePackage>com.woodare.template.web</controllerBasePackage> -->
+					<controllerBasePackage>com.woodare.template.web</controllerBasePackage>
 					<!-- <servicePackage>com.woodare.template.jersery</servicePackage> -->
-					<viewFlag>false</viewFlag>
+					<viewFlag>true</viewFlag>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -29,7 +29,7 @@ public class SealblockClient {
 	private static Logger log = Logger.getLogger(SealblockClient.class);
 
 	public static final int TIMEOUT_SECONDS = 5;
-	public static final long TRANSACTION_TIMEOUT = 3L;
+	public static final long TRANSACTION_TIMEOUT = 30L;
 
 	private static final int THREAD_NUM = 100;
 

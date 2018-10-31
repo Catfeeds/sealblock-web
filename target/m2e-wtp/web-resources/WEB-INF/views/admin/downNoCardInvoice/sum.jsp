@@ -100,29 +100,29 @@ table.list-wapper td.num {
 				<my:percent value="${item.count}" total="${item.totalCount}"/>
 			</td>
 			<td class="num">
-				<fmt:formatNumber value="${item.totalPrice}" pattern="#,##0.00#"/>&nbsp;
+				<fmt:formatNumber value="${item.totalPrice}" pattern="#,##0.00000000#"/>&nbsp;
 			</td>
 			<td class="num">
 				<c:out value="${item.totalCount}" />&nbsp;
 			</td>
 			<td class="num">
-				<fmt:formatNumber value="${item.price}" pattern="#,##0.00#"/>&nbsp;
+				<fmt:formatNumber value="${item.price}" pattern="#,##0.00000000#"/>&nbsp;
 			</td>
 			<td class="num">
-				<fmt:formatNumber value="${item.realPrice}" pattern="#,##0.00#"/>&nbsp;
+				<fmt:formatNumber value="${item.realPrice}" pattern="#,##0.00000000#"/>&nbsp;
 			</td>
 			<td class="num">
 				<c:out value="${item.count}" />&nbsp;
 			</td>
 			
 			<td class="num">
-				<fmt:formatNumber value="${item.feePrice}" pattern="#,##0.00#"/>&nbsp;
+				<fmt:formatNumber value="${item.feePrice}" pattern="#,##0.00000000#"/>&nbsp;
 			</td>
 			<td class="num">
-				<fmt:formatNumber value="${item.agtProfit}" pattern="#,##0.00#"/>&nbsp;
+				<fmt:formatNumber value="${item.agtProfit}" pattern="#,##0.00000000#"/>&nbsp;
 			</td>
 			<td class="num">
-				<fmt:formatNumber value="${item.profit}" pattern="#,##0.00#"/>&nbsp;
+				<fmt:formatNumber value="${item.profit}" pattern="#,##0.00000000#"/>&nbsp;
 			</td>
 		</tr>
 		
@@ -144,17 +144,16 @@ table.list-wapper td.num {
 			<td><label style="font-weight: bold; text-align: right;">合计（本页）</label></td>
 			<td>&nbsp;</td>
 			
-			<td>&nbsp;</td>
-			<td class="num"><fmt:formatNumber type='number' value='${totalPrice}' pattern='#,##0.00#' maxFractionDigits='2'/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber type='number' value='${totalPrice}' pattern='#,##0.00000000#' maxFractionDigits='2'/>&nbsp;</td>
 			<td class="num"><c:out value="${totalCount}" />&nbsp;</td>
 			
-			<td class="num"><fmt:formatNumber type='number' value='${price}' pattern='#,##0.00#' maxFractionDigits='2'/>&nbsp;</td>
-			<td class="num"><fmt:formatNumber type='number' value='${realPrice}' pattern='#,##0.00#' maxFractionDigits='2'/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber type='number' value='${price}' pattern='#,##0.00000000#' maxFractionDigits='2'/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber type='number' value='${realPrice}' pattern='#,##0.00000000#' maxFractionDigits='2'/>&nbsp;</td>
 			<td class="num"><c:out value="${count}" />&nbsp;</td>
 			
-			<td class="num"><fmt:formatNumber type='number' value='${feePrice}' pattern='#,##0.00#' maxFractionDigits='2'/>&nbsp;</td>
-			<td class="num"><fmt:formatNumber type='number' value='${agtProfit}' pattern='#,##0.00#' maxFractionDigits='2'/>&nbsp;</td>
-			<td class="num"><fmt:formatNumber type='number' value='${profit}' pattern='#,##0.00#' maxFractionDigits='2'/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber type='number' value='${feePrice}' pattern='#,##0.00000000#' maxFractionDigits='8'/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber type='number' value='${agtProfit}' pattern='#,##0.00000000#' maxFractionDigits='2'/>&nbsp;</td>
+			<td class="num"><fmt:formatNumber type='number' value='${profit}' pattern='#,##0.00000000#' maxFractionDigits='2'/>&nbsp;</td>
 		</tr>
 	</c:if>
 </table>

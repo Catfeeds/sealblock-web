@@ -25,7 +25,7 @@ public class SealBlockApi {
 	// 服务器连接地址
 	public static String URL = "http://localhost:8080/sealblock-web/ws/trans";
 	// 机构号
-	public static String MCH_NO = "T00f1";
+	public static String MCH_NO = "T0001";
 	// 加密密钥
 	public static String ENC_KEY = "1234567812345678";
 	// 签名密钥
@@ -47,13 +47,15 @@ public class SealBlockApi {
 		// 交易相关
 		interface Transaction {
 			// 下单&发短信
-			String MakeOrder = "/nocard/makeOrder";
+			String MakeOrder = "/nocard/Transfer";
 			// 短信确认
 			String ConfirmOrder = "/nocard/confirmOrder";
 			// 查询状态
 			String OrderQuery = "/nocard/orderQuery";
 			// 机构余额查询
 			String AccBalQuery = "/nocard/accBalQuery";
+			// 交易转账
+			String BalanceTransfer = "/balanceTransfer/Transfer";
 		}
 	}
 

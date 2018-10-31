@@ -14,6 +14,10 @@
 			<a class="zhyk-nav-link" data-href="<c:url value="/admin/downNoCardInvoice/sum"/>" onclick="openTabs(this);return false;">快捷交易汇总</a>
 		</li>
 		<li>
+			<i class="fa fa-area-chart"></i>
+			<a class="zhyk-nav-link" data-href="<c:url value="/admin/downBalanceTransfer/index"/>" onclick="openTabs(this);return false;">用户转账明细</a>
+		</li>
+		<li>
 			<i class="fa fa-money"></i>
 			<a class="zhyk-nav-link" data-href="<c:url value="/admin/downMerchantFundAccount/index"/>" onclick="openTabs(this);return false;">机构余额管理</a>
 		</li>
@@ -95,7 +99,7 @@
 		</li>
 		<li>
 			<i class="fa fa-user-secret"></i>
-			<a class="zhyk-nav-link" data-href="<c:url value="/admin/downMerchant/index"/>" onclick="openTabs(this);return false;">机构人员管理</a>
+			<a class="zhyk-nav-link" data-href="<c:url value="/admin/userInfo/index"/>" onclick="openTabs(this);return false;">机构人员管理</a>
 		</li>
 		<%-- <li>
 			<i class="fa fa-vimeo"></i>

@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="utils" tagdir="/WEB-INF/tags/utils"%>
+
 <form class="search-form" action="<c:url value="/admin/userInfo/index" />" method="post">
 	<label for="keywords">过滤条件：</label>
 	<input type="text" class="input-box search-input-box" placeholder="关键字" name="keywords" value="${search.keywords}"></input>
@@ -13,8 +14,8 @@
 </form>
 <table class="list-wapper">
 	<tr class="list-header">
+		<td>机构名称</td>
 		<td>用户名</td>
-		<td>商户名称</td>
 		<td>邮箱</td>
 		<td>最后登录时间</td>
 		<td class="td-width-20">操作</td>
@@ -22,10 +23,10 @@
 	<c:forEach var="item" items="${res.items}" varStatus="status">
 		<tr class="list-item">
 			<td>
-				<c:out value="${item.username}" />
+				<c:out value="${item.name}" />
 			</td>
 			<td>
-				<c:out value="${item.name}" />
+				<c:out value="${item.username}" />
 			</td>
 			<td>
 				<c:out value="${item.email}" />

@@ -29,7 +29,9 @@ public class B01_MakeOrderSample {
 		// 机构号
 		reqData.put("mchNo", SealBlockApi.MCH_NO);
 		// userNo 平台用戶标识
-		reqData.put("userNo", "F66A005345CC4CBEA2D44415163684DE");
+		reqData.put("userNo", "B14FD596D7864CEAB46F73096D4CD504");
+		//用户币地址
+		reqData.put("userCoinAddr", "10e4889b40dc87040fe2fed3089df4d206d56a1d");
 		// coin 货币类型
 		reqData.put("coin", "ETH");
 		// price 交易金额
@@ -44,7 +46,7 @@ public class B01_MakeOrderSample {
 		reqData.put("notifyUrl", "http://www.baidu.com");
 
 		try {
-			JSONObject respData = SealBlockApi.doEncPost(SealBlockApi.Api.Transaction.MakeOrder, reqData);
+			JSONObject respData = SealBlockApi.doEncPost(SealBlockApi.Api.Transaction.BalanceTransfer, reqData);
 			System.out.println("平台订单号： " + respData.getString("transNo"));
 			System.out.println("*下单状态： " + respData.getString("status"));
 			System.out.println("*下单描述： " + respData.getString("statusDesc"));
